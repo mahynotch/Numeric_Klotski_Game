@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,9 +13,16 @@ public class Main {
                 board[i][j] = scanner.nextInt();
             }
         }
-        for(int i = 0; i < scanner.nextInt(); i++) {
-            
+        int morbidLength = scanner.nextInt();
+        HashMap<Integer, String> hashMap = new HashMap<>();
+        for(int i = 0; i < morbidLength; i++) {
+            hashMap.put(scanner.nextInt(), scanner.next());
         }
-        System.out.println();
+        for(int[] i: board){
+            for (int j: i){
+                System.out.print(j + " ");
+            }
+        }
+        System.out.println(hashMap.keySet());
     }
 }
