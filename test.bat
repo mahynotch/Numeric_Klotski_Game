@@ -1,8 +1,6 @@
 @echo off
 
-for %%i in (.\src\*.class) do (%%i > list.txt
-echo , > list.txt)
-javac -encoding=utf-8 -sourcefiles 
+javac -encoding utf-8  --source-path ./src/Board.java ./src/Piece.java ./src/Main.java ./src/Coordinate.java -d ./
 java Main < ./test/1.txt
+for %%i in (.\*.class) do (del %%i)
 pause
-for %%i in (.\src\*.class) do (del %%i)
