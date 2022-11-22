@@ -1,3 +1,4 @@
+//本类用来储存坐标
 public class Coordinate {
     int x;
     int y;
