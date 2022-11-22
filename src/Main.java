@@ -12,6 +12,7 @@ public class Main {
             }
         }
         for(int i = 0; i < scanner.nextInt(); i++) {
+            
         }
         System.out.println();
     }
