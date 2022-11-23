@@ -7,4 +7,4 @@ todo:
 - [ ] 对于一份标准输出，可以在棋盘上显示出移动过程：侯
 - [ ] Bonus棋盘随机打乱方法
 
-@import "./Numeric_Klotski.pdf"
+[作业要求文件](./Numeric_Klotski.pdf)
