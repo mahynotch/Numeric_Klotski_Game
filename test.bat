@@ -1,6 +1,13 @@
 @echo off
-
-javac -encoding utf-8  --source-path ./src/Board.java ./src/Piece.java ./src/Main.java ./src/Coordinate.java -d ./
-java Main < ./test/1.txt
+if "%OS%"=="Windows_NT" setlocal enabledelayedexpansion
+set "bastPath=%~dp0"
+set allFile=
+for /r %%i in (./src/*.java) do (
+    set "var=%%i"
+    set "allFile=!allFile! ./src/!var:%bastPath%=!"
+)
+echo %allFile%
+javac -encoding utf-8  --source-path %allFile% -d ./
+java Main terminal < ./test/1.txt
 for %%i in (.\*.class) do (del %%i)
 pause

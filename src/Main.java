@@ -5,7 +5,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        GUI();
+        //方便调试，之后会改
+        if (args.length == 0) {
+            GUI();
+        } else {
+            CLI();
+        }
     }
 
     //CLI界面
