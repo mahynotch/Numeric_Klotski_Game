@@ -1,16 +1,13 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) {
-        //方便调试，之后会改
-        if (args.length == 0) {
-            GUI();
-        } else {
-            CLI();
-        }
+        CLI();
     }
 
     //CLI界面
@@ -35,21 +32,5 @@ public class Main {
             }
         }
         System.out.println(hashMap.keySet());
-    }
-
-    //GUI界面
-    private static void GUI() {
-        JFrame frame = new JFrame("Input");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel text = new JLabel("请输入");
-        text.setAlignmentX(500);
-        text.setAlignmentY(500);
-        frame.getContentPane().add(text);
-        frame.getContentPane().add(new JTextField());
-        frame.getContentPane().add(new JTextField());
-        // 显示窗口
-        frame.pack();
-        frame.setSize(1000, 1000);
-        frame.setVisible(true);
     }
 }
