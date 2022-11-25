@@ -35,12 +35,12 @@ public class Coordinate {
     }
 
     public Coordinate moveLeft(int a) {
-        y += a;
+        x -= a;
         return this;
     }
 
     public Coordinate moveRight(int a) {
-        y -= a;
+        x += a;
         return this;
     }
 
