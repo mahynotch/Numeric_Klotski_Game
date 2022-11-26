@@ -86,7 +86,7 @@ public class Board {
                     boardC[2 * i + 2][2 * j + 1] = " ";
                     boardC[2 * i + 1][2 * j + 2] = "  ";
                 }
-                boardC[2 * i][2 * j] = String.format("%2d", value);
+                boardC[2 * i][2 * j] = value != 0 ? String.format("%2d", value) : "  ";
             }
         }
         StringBuilder sb = new StringBuilder();
