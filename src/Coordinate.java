@@ -24,25 +24,7 @@ public class Coordinate {
         return y;
     }
 
-    public Coordinate moveUp(int a) {
-        y -= a;
-        return this;
-    }
 
-    public Coordinate moveDown(int a) {
-        y += a;
-        return this;
-    }
-
-    public Coordinate moveLeft(int a) {
-        x -= a;
-        return this;
-    }
-
-    public Coordinate moveRight(int a) {
-        x += a;
-        return this;
-    }
 
     @Override
     public boolean equals(Object obj) {
