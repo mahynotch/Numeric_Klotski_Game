@@ -74,5 +74,8 @@ public class Main {
         Board board = new Board(pieces.toArray(new Piece[0]), boardArray[0].length - 1, boardArray.length - 1);
         //展示棋盘
         System.out.println(board.toString());
+        //测试并打印移动后的棋盘
+        board.Move(board.findPieceByValue(0),Direction.UP);
+        System.out.println(board.toString());
     }
 }

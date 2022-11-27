@@ -48,6 +48,52 @@ public class Board {
         throw new IllegalArgumentException("The coordinate is empty");
     }
 
+    public boolean canMove(Piece piece, Direction Direction) {
+        Coordinate[] Cor = piece.getCoordinate();
+        int x = Cor[Cor.length - 1].x;
+        int y = Cor[Cor.length - 1].y;
+        switch (Direction) {
+            case LEFT:
+                return x > 0;
+            case RIGHT:
+                return x < marginX;
+            case UP:
+                return y > 0;
+            case DOWN:
+                return y < marginY;
+        }
+        return false;
+    }
+
+    public void Move(Piece piece,Direction Direction){
+        Coordinate[] Cor = piece.getCoordinate();
+        int x = Cor[Cor.length - 1].x;
+        int y = Cor[Cor.length - 1].y;
+        int a;
+        switch(Direction){
+            case LEFT:
+                a = findPieceByCoordinate(x-1,y).getValue()[findPieceByCoordinate(x-1,y).getValue().length-1];
+                findPieceByCoordinate(x-1,y).getValue()[0] = 0;
+                findPieceByCoordinate(x,y).getValue()[0] = a;
+                break;
+            case RIGHT:
+                a = findPieceByCoordinate(x+1,y).getValue()[findPieceByCoordinate(x+1,y).getValue().length-1];
+                findPieceByCoordinate(x+1,y).getValue()[0] = 0;
+                findPieceByCoordinate(x,y).getValue()[0] = a;
+                break;
+            case UP:
+                a = findPieceByCoordinate(x,y-1).getValue()[findPieceByCoordinate(x,y-1).getValue().length-1];
+                findPieceByCoordinate(x,y-1).getValue()[0] = 0;
+                findPieceByCoordinate(x,y).getValue()[0] = a;
+                break;
+            case DOWN:
+                a = findPieceByCoordinate(x,y+1).getValue()[findPieceByCoordinate(x,y+1).getValue().length-1];
+                findPieceByCoordinate(x,y+1).getValue()[0] = 0;
+                findPieceByCoordinate(x,y).getValue()[0] = a;
+                break;
+        }
+    }
+
 
     @Override
     public String toString() {
@@ -90,9 +136,9 @@ public class Board {
             }
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < boardC.length; i++) {
+        for (String[] strings : boardC) {
             for (int j = 0; j < boardC[0].length; j++) {
-                sb.append(boardC[i][j]);
+                sb.append(strings[j]);
             }
             sb.append('\n');
         }
