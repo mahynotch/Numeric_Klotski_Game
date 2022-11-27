@@ -1,16 +1,23 @@
+import javax.swing.*;
+
 //本类用以储存棋子
-public class Board {
+public class Board extends JComponent {
     //棋子列表
     Piece[] pieces;
     //横向边缘
     int marginX;
     //纵向边缘
     int marginY;
+    GameFrame gameFrame;
 
     public Board(Piece[] pieces, int marginX, int marginY) {
         this.pieces = pieces;
         this.marginX = marginX;
         this.marginY = marginY;
+    }
+
+    public void setGameFrame(GameFrame gameFrame) {
+       this.gameFrame = gameFrame;
     }
 
     public Piece findPieceByValue(int key) {
@@ -48,7 +55,7 @@ public class Board {
         throw new IllegalArgumentException("The coordinate is empty");
     }
 
-    public boolean canMove(Piece piece, Direction Direction) {
+    public boolean zeroCanMove(Piece piece, Direction Direction) {
         Coordinate[] Cor = piece.getCoordinate();
         int x = Cor[Cor.length - 1].x;
         int y = Cor[Cor.length - 1].y;
@@ -69,29 +76,29 @@ public class Board {
         Coordinate[] Cor = piece.getCoordinate();
         int x = Cor[Cor.length - 1].x;
         int y = Cor[Cor.length - 1].y;
-        int a;
-        switch(Direction){
-            case LEFT:
-                a = findPieceByCoordinate(x-1,y).getValue()[findPieceByCoordinate(x-1,y).getValue().length-1];
-                findPieceByCoordinate(x-1,y).getValue()[0] = 0;
-                findPieceByCoordinate(x,y).getValue()[0] = a;
-                break;
-            case RIGHT:
-                a = findPieceByCoordinate(x+1,y).getValue()[findPieceByCoordinate(x+1,y).getValue().length-1];
-                findPieceByCoordinate(x+1,y).getValue()[0] = 0;
-                findPieceByCoordinate(x,y).getValue()[0] = a;
-                break;
-            case UP:
-                a = findPieceByCoordinate(x,y-1).getValue()[findPieceByCoordinate(x,y-1).getValue().length-1];
-                findPieceByCoordinate(x,y-1).getValue()[0] = 0;
-                findPieceByCoordinate(x,y).getValue()[0] = a;
-                break;
-            case DOWN:
-                a = findPieceByCoordinate(x,y+1).getValue()[findPieceByCoordinate(x,y+1).getValue().length-1];
-                findPieceByCoordinate(x,y+1).getValue()[0] = 0;
-                findPieceByCoordinate(x,y).getValue()[0] = a;
-                break;
-        }
+            int a;
+            switch(Direction){
+                case LEFT:
+                    a = findPieceByCoordinate(x-1,y).getValue()[findPieceByCoordinate(x-1,y).getValue().length-1];
+                    findPieceByCoordinate(x-1,y).getValue()[0] = 0;
+                    findPieceByCoordinate(x,y).getValue()[0] = a;
+                    break;
+                case RIGHT:
+                    a = findPieceByCoordinate(x+1,y).getValue()[findPieceByCoordinate(x+1,y).getValue().length-1];
+                    findPieceByCoordinate(x+1,y).getValue()[0] = 0;
+                    findPieceByCoordinate(x,y).getValue()[0] = a;
+                    break;
+                case UP:
+                    a = findPieceByCoordinate(x,y-1).getValue()[findPieceByCoordinate(x,y-1).getValue().length-1];
+                    findPieceByCoordinate(x,y-1).getValue()[0] = 0;
+                    findPieceByCoordinate(x,y).getValue()[0] = a;
+                    break;
+                case DOWN:
+                    a = findPieceByCoordinate(x,y+1).getValue()[findPieceByCoordinate(x,y+1).getValue().length-1];
+                    findPieceByCoordinate(x,y+1).getValue()[0] = 0;
+                    findPieceByCoordinate(x,y).getValue()[0] = a;
+                    break;
+            }
     }
 
 

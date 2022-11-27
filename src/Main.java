@@ -71,11 +71,17 @@ public class Main {
                 }
             }
         }
+
+        Piece[]pieces1 = pieces.toArray(new Piece[0]);
+
         Board board = new Board(pieces.toArray(new Piece[0]), boardArray[0].length - 1, boardArray.length - 1);
         //展示棋盘
-        System.out.println(board.toString());
+        System.out.println(board);
         //测试并打印移动后的棋盘
-        board.Move(board.findPieceByValue(0),Direction.UP);
-        System.out.println(board.toString());
+       // board.Move(board.findPieceByValue(0),Direction.UP);
+        //System.out.println(board);
+        //打开Frame并传入数据
+        GameFrame gameFrame = new GameFrame(500,600,pieces1,row,column);
+        gameFrame.setVisible(true);
     }
 }
