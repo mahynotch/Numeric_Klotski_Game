@@ -51,7 +51,7 @@ public class Board {
 
     @Override
     public String toString() {
-        String[][] boardC = new String[(marginY + 1) * 2][(marginX + 1) * 2];
+        String[][] boardC = new String[(marginY + 1) * 2 - 1][(marginX + 1) * 2 - 1];
 //        for (int i = 0; i < boardC[0].length; i++) {
 //            boardC[boardC.length - 1][i] = boardC[0][i] = "-";
 //        }
