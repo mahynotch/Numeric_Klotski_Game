@@ -24,7 +24,10 @@ public class Coordinate {
         return y;
     }
 
-
+    public void move(int dx, int dy) {
+        x += dx;
+        y += dy;
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -17,7 +17,7 @@ public class Board extends JComponent {
     }
 
     public void setGameFrame(GameFrame gameFrame) {
-       this.gameFrame = gameFrame;
+        this.gameFrame = gameFrame;
     }
 
     public Piece findPieceByValue(int key) {
@@ -29,6 +29,10 @@ public class Board extends JComponent {
             }
         }
         throw new IllegalArgumentException("No piece of such key");
+    }
+
+    public Piece[] getPieces() {
+        return pieces;
     }
 
     public Piece findPieceByCoordinate(int x, int y) {
@@ -72,35 +76,72 @@ public class Board extends JComponent {
         return false;
     }
 
-    public void Move(Piece piece,Direction Direction){
+    public void Move(Piece piece, Direction direction) {
         Coordinate[] Cor = piece.getCoordinate();
-        int x = Cor[Cor.length - 1].x;
-        int y = Cor[Cor.length - 1].y;
-            int a;
-            switch(Direction){
+        int x = Cor[Cor.length - 1].getX();
+        int y = Cor[Cor.length - 1].getY();
+        Piece aim;
+        PieceType aimType;
+        if (zeroCanMove(piece, direction)) {
+            switch (direction) {
                 case LEFT:
-                    a = findPieceByCoordinate(x-1,y).getValue()[findPieceByCoordinate(x-1,y).getValue().length-1];
-                    findPieceByCoordinate(x-1,y).getValue()[0] = 0;
-                    findPieceByCoordinate(x,y).getValue()[0] = a;
-                    break;
+                    aim = findPieceByCoordinate(x - 1, y);
+                    aimType = aim.pieceType;
+                    aim.move(Direction.RIGHT);
+                    piece.move(Direction.LEFT);
+                    return;
                 case RIGHT:
-                    a = findPieceByCoordinate(x+1,y).getValue()[findPieceByCoordinate(x+1,y).getValue().length-1];
-                    findPieceByCoordinate(x+1,y).getValue()[0] = 0;
-                    findPieceByCoordinate(x,y).getValue()[0] = a;
-                    break;
+                    aim = findPieceByCoordinate(x + 1, y);
+                    aimType = aim.pieceType;
+                    aim.move(Direction.LEFT);
+                    piece.move(Direction.RIGHT);
+                    return;
                 case UP:
-                    a = findPieceByCoordinate(x,y-1).getValue()[findPieceByCoordinate(x,y-1).getValue().length-1];
-                    findPieceByCoordinate(x,y-1).getValue()[0] = 0;
-                    findPieceByCoordinate(x,y).getValue()[0] = a;
-                    break;
+                    aim = findPieceByCoordinate(x, y - 1);
+                    aimType = aim.pieceType;
+                    aim.move(Direction.DOWN);
+                    piece.move(Direction.UP);
+                    return;
                 case DOWN:
-                    a = findPieceByCoordinate(x,y+1).getValue()[findPieceByCoordinate(x,y+1).getValue().length-1];
-                    findPieceByCoordinate(x,y+1).getValue()[0] = 0;
-                    findPieceByCoordinate(x,y).getValue()[0] = a;
-                    break;
+                    aim = findPieceByCoordinate(x, y + 1);
+                    aimType = aim.pieceType;
+                    aim.move(Direction.UP);
+                    piece.move(Direction.DOWN);
+                    return;
             }
+        }
+        throw new ArrayIndexOutOfBoundsException("You are moving out of the margin!");
     }
 
+    public void moveable(Piece piece, Direction direction) {
+        int x = piece.getCoordinate()[0].getX();
+        int y = piece.getCoordinate()[0].getY();
+        PieceType pieceType = piece.pieceType;
+        switch (pieceType) {
+            case BLANK: {
+                switch (direction) {
+                    case RIGHT: {
+
+                    }
+                }
+            }
+        }
+    }
+
+    public Direction counterDirection(Direction direction) {
+        switch (direction) {
+            case RIGHT:
+                return Direction.LEFT;
+            case DOWN:
+                return Direction.UP;
+            case UP:
+                return Direction.DOWN;
+            case LEFT:
+                return Direction.RIGHT;
+            default:
+                return null;
+        }
+    }
 
     @Override
     public String toString() {

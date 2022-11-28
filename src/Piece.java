@@ -10,6 +10,25 @@ public class Piece {
         this.pieceType = pieceType;
     }
 
+    public void move(Direction direction) {
+        switch (direction) {
+            case UP:
+                innerMove(0, -1);
+            case DOWN:
+                innerMove(0, 1);
+            case LEFT:
+                innerMove(-1, 0);
+            case RIGHT:
+                innerMove(1, 0);
+        }
+    }
+
+    private void innerMove(int dx, int dy) {
+        for (Coordinate i : coordinate) {
+            i.move(dx, dy);
+        }
+    }
+
     public Coordinate[] getCoordinate() {
         return coordinate;
     }
