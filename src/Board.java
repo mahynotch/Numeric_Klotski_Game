@@ -59,23 +59,6 @@ public class Board extends JComponent {
         throw new IllegalArgumentException("The coordinate is empty");
     }
 
-    public boolean zeroCanMove(Piece piece, Direction Direction) {
-        Coordinate[] Cor = piece.getCoordinate();
-        int x = Cor[Cor.length - 1].x;
-        int y = Cor[Cor.length - 1].y;
-        switch (Direction) {
-            case LEFT:
-                return x > 0;
-            case RIGHT:
-                return x < marginX;
-            case UP:
-                return y > 0;
-            case DOWN:
-                return y < marginY;
-        }
-        return false;
-    }
-
     public void move(Piece piece, Direction direction) {
         Coordinate[] Cor = piece.getCoordinate();
         int x = Cor[0].getX();
