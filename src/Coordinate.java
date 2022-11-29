@@ -25,8 +25,8 @@ public class Coordinate {
     }
 
     public void move(int dx, int dy) {
-        x += dx;
-        y += dy;
+        this.x = x + dx;
+        this.y = y + dy;
     }
 
     @Override

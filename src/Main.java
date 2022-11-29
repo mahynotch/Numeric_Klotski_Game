@@ -22,7 +22,10 @@ public class Main {
         for (int i = 0; i < morbidLength; i++) {
             hashMap.put(scanner.nextInt(), scanner.next());
         }
+        long startTime = System.currentTimeMillis();
         CLI(hashMap, boardArray);
+        long endTime = System.currentTimeMillis();
+        System.out.println("Running time:" + (endTime - startTime));
     }
 
     //CLI界面
@@ -31,7 +34,6 @@ public class Main {
         int column = boardArray[0].length;
         Board board = arrayToBoard(hashMap, boardArray);
         ArrayList<Piece> pieces;
-
         Piece[] pieces1 = board.getPieces();
         //展示棋盘
         System.out.println(board);

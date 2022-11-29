@@ -38,8 +38,8 @@ public class Board extends JComponent {
     public Piece findPieceByCoordinate(int x, int y) {
         Coordinate coordinate = new Coordinate(x, y);
         for (Piece j : pieces) {
-            for (int k = 0; k < j.getCoordinate().length; k++) {
-                if (j.getCoordinate()[k].equals(coordinate)) {
+            for (Coordinate c : j.getCoordinate()) {
+                if (c.equals(coordinate)) {
                     return j;
                 }
             }
@@ -76,56 +76,199 @@ public class Board extends JComponent {
         return false;
     }
 
-    public void Move(Piece piece, Direction direction) {
+    public void move(Piece piece, Direction direction) {
         Coordinate[] Cor = piece.getCoordinate();
-        int x = Cor[Cor.length - 1].getX();
-        int y = Cor[Cor.length - 1].getY();
+        int x = Cor[0].getX();
+        int y = Cor[0].getY();
         Piece aim;
-        PieceType aimType;
-        if (zeroCanMove(piece, direction)) {
-            switch (direction) {
-                case LEFT:
-                    aim = findPieceByCoordinate(x - 1, y);
-                    aimType = aim.pieceType;
-                    aim.move(Direction.RIGHT);
-                    piece.move(Direction.LEFT);
-                    return;
-                case RIGHT:
-                    aim = findPieceByCoordinate(x + 1, y);
-                    aimType = aim.pieceType;
-                    aim.move(Direction.LEFT);
-                    piece.move(Direction.RIGHT);
-                    return;
-                case UP:
-                    aim = findPieceByCoordinate(x, y - 1);
-                    aimType = aim.pieceType;
-                    aim.move(Direction.DOWN);
-                    piece.move(Direction.UP);
-                    return;
-                case DOWN:
-                    aim = findPieceByCoordinate(x, y + 1);
-                    aimType = aim.pieceType;
-                    aim.move(Direction.UP);
-                    piece.move(Direction.DOWN);
-                    return;
+        switch (direction) {
+            case LEFT:
+                aim = findPieceByCoordinate(x - 1, y);
+                break;
+            case RIGHT:
+                aim = findPieceByCoordinate(x + 1, y);
+                break;
+            case UP:
+                aim = findPieceByCoordinate(x, y - 1);
+                break;
+            case DOWN:
+                aim = findPieceByCoordinate(x, y + 1);
+                break;
+            default:
+                aim = findPieceByCoordinate(x, y);
+        }
+        switch (piece.pieceType) {
+            case BLANK: {
+                Piece temp = piece;
+                piece = aim;
+                aim = temp;
+            }
+            case ONETOONE: {
+                piece.move(direction);
+                aim.move(counterDirection(direction));
+                return;
+            }
+            case ONETOTWO: {
+                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+                    piece.move(direction);
+                    aim.move(counterDirection(direction));
+                    aim.move(counterDirection(direction));
+                } else {
+                    findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY()).move(counterDirection(direction));
+                    aim.move(counterDirection(direction));
+                    piece.move(direction);
+                }
+                return;
+            }
+            case TWOTOONE: {
+                if (direction == Direction.UP | direction == Direction.DOWN) {
+                    piece.move(direction);
+                    aim.move(counterDirection(direction));
+                    aim.move(counterDirection(direction));
+                } else {
+                    findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1).move(counterDirection(direction));
+                    aim.move(counterDirection(direction));
+                    piece.move(direction);
+                }
+                return;
+            }
+            case TWOTOTWO: {
+                if (direction == Direction.UP | direction == Direction.DOWN) {
+                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY());
+                    aim.move(counterDirection(direction));
+                    aim.move(counterDirection(direction));
+                    aim2.move(counterDirection(direction));
+                    aim2.move(counterDirection(direction));
+                    piece.move(direction);
+                } else {
+                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1);
+                    aim.move(counterDirection(direction));
+                    aim.move(counterDirection(direction));
+                    aim2.move(counterDirection(direction));
+                    aim2.move(counterDirection(direction));
+                    piece.move(direction);
+                }
             }
         }
-        throw new ArrayIndexOutOfBoundsException("You are moving out of the margin!");
     }
 
-    public void moveable(Piece piece, Direction direction) {
+    public boolean moveable(Piece piece, Direction direction) {
         int x = piece.getCoordinate()[0].getX();
         int y = piece.getCoordinate()[0].getY();
         PieceType pieceType = piece.pieceType;
+        Piece aim;
+        switch (direction) {
+            case LEFT:
+                if (x == 0) return false;
+                aim = findPieceByCoordinate(x - 1, y);
+                break;
+            case RIGHT:
+                if (x == marginX) return false;
+                aim = findPieceByCoordinate(x + 1, y);
+                break;
+            case UP:
+                if (y == 0) return false;
+                aim = findPieceByCoordinate(x, y - 1);
+                break;
+            case DOWN:
+                if (y == marginY) return false;
+                aim = findPieceByCoordinate(x, y + 1);
+                break;
+            default:
+                aim = findPieceByCoordinate(x, y);
+        }
+        if (aim.pieceType != PieceType.BLANK) {
+            return false;
+        }
         switch (pieceType) {
+            case ONETOONE:
             case BLANK: {
-                switch (direction) {
-                    case RIGHT: {
+                return true;
+            }
+            case TWOTOONE: {
+                if (direction == Direction.UP | direction == Direction.DOWN) {
+                    return true;
+                } else {
+                    return findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1).pieceType == PieceType.BLANK;
+                }
+            }
+            case ONETOTWO: {
+                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+                    return true;
+                } else {
+                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY()).pieceType == PieceType.BLANK;
+                }
+            }
+            case TWOTOTWO: {
+                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+                    return findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1).pieceType == PieceType.BLANK;
+                } else {
+                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY()).pieceType == PieceType.BLANK;
+                }
+            }
+        }
+        return false;
+    }
 
+    public boolean zeroMovable(Piece piece, Direction direction) {
+        if (piece.pieceType != PieceType.BLANK) {
+            throw new IllegalArgumentException("This is not a BLANK piece!");
+        }
+        int x = piece.getCoordinate()[0].getX();
+        int y = piece.getCoordinate()[0].getY();
+        Piece aim;
+        switch (direction) {
+            case LEFT:
+                if (x == 0) return false;
+                aim = findPieceByCoordinate(x - 1, y);
+                break;
+            case RIGHT:
+                if (x == marginX) return false;
+                aim = findPieceByCoordinate(x + 1, y);
+                break;
+            case UP:
+                if (y == 0) return false;
+                aim = findPieceByCoordinate(x, y - 1);
+                break;
+            case DOWN:
+                if (y == marginY) return false;
+                aim = findPieceByCoordinate(x, y + 1);
+                break;
+            default:
+                aim = findPieceByCoordinate(x, y);
+        }
+        switch (aim.pieceType) {
+            case ONETOONE:
+            case BLANK: {
+                return true;
+            }
+            case TWOTOONE: {
+                if (direction == Direction.UP | direction == Direction.DOWN) {
+                    return true;
+                } else {
+                    return findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK;
+                }
+            }
+            case ONETOTWO: {
+                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+                    return true;
+                } else {
+                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK;
+                }
+            }
+            case TWOTOTWO: {
+                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+                    if (findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK) {
+                        return true;
+                    }
+                } else {
+                    if (findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK) {
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     public Direction counterDirection(Direction direction) {

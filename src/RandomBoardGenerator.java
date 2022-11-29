@@ -7,6 +7,7 @@ public class RandomBoardGenerator {
     public static void main(String[] args) {
         Random random = new Random();
         int[][] pieceArray = arrayGenerate(random.nextInt(5) + 1, random.nextInt(5) + 1);
+
     }
 
     private static int[][] arrayGenerate(int row, int column) {

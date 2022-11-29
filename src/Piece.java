@@ -14,10 +14,13 @@ public class Piece {
         switch (direction) {
             case UP:
                 innerMove(0, -1);
+                return;
             case DOWN:
                 innerMove(0, 1);
+                return;
             case LEFT:
                 innerMove(-1, 0);
+                return;
             case RIGHT:
                 innerMove(1, 0);
         }
