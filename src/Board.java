@@ -5,9 +5,9 @@ public class Board extends JComponent {
     //棋子列表
     Piece[] pieces;
     //横向边缘
-    int marginX;
+    final int marginX;
     //纵向边缘
-    int marginY;
+    final int marginY;
     GameFrame gameFrame;
 
     public Board(Piece[] pieces, int marginX, int marginY) {
@@ -83,16 +83,16 @@ public class Board extends JComponent {
         Piece aim;
         switch (direction) {
             case LEFT:
-                aim = findPieceByCoordinate(x - 1, y);
+                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x - 2 : x - 1, y);
                 break;
             case RIGHT:
-                aim = findPieceByCoordinate(x + 1, y);
+                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x + 2 : x + 1, y);
                 break;
             case UP:
-                aim = findPieceByCoordinate(x, y - 1);
+                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y - 2 : y - 1);
                 break;
             case DOWN:
-                aim = findPieceByCoordinate(x, y + 1);
+                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y + 2 : y + 1);
                 break;
             default:
                 aim = findPieceByCoordinate(x, y);
@@ -160,19 +160,19 @@ public class Board extends JComponent {
         switch (direction) {
             case LEFT:
                 if (x == 0) return false;
-                aim = findPieceByCoordinate(x - 1, y);
+                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x - 2 : x - 1, y);
                 break;
             case RIGHT:
                 if (x == marginX) return false;
-                aim = findPieceByCoordinate(x + 1, y);
+                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x + 2 : x + 1, y);
                 break;
             case UP:
                 if (y == 0) return false;
-                aim = findPieceByCoordinate(x, y - 1);
+                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y - 2 : y - 1);
                 break;
             case DOWN:
                 if (y == marginY) return false;
-                aim = findPieceByCoordinate(x, y + 1);
+                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y + 2 : y + 1);
                 break;
             default:
                 aim = findPieceByCoordinate(x, y);
