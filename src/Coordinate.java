@@ -1,5 +1,5 @@
 //本类用来储存坐标
-public class Coordinate {
+public class Coordinate implements Cloneable {
     int x;
     int y;
 
@@ -33,5 +33,10 @@ public class Coordinate {
     public boolean equals(Object obj) {
         if (obj instanceof Coordinate) return ((Coordinate) obj).getX() == x && ((Coordinate) obj).getY() == y;
         else throw new IllegalArgumentException("This is not a Coordinate!");
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

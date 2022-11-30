@@ -1,6 +1,6 @@
 //本类为棋子
-public class Piece {
-    private final int[] value;
+public class Piece implements Cloneable {
+    private int[] value;
     Coordinate[] coordinate;
     PieceType pieceType;
 
@@ -38,5 +38,13 @@ public class Piece {
 
     public int[] getValue() {
         return value;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Piece clone = (Piece) super.clone();
+        clone.value = value.clone();
+        clone.coordinate = coordinate.clone();
+        return clone;
     }
 }

@@ -2,13 +2,13 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 //本类用以储存棋子
-public class Board extends JComponent {
+public class Board extends JComponent implements Cloneable {
     //棋子列表
     Piece[] pieces;
     //横向边缘
-    final int marginX;
+    int marginX;
     //纵向边缘
-    final int marginY;
+    int marginY;
     GameFrame gameFrame;
 
     int[][] sorted;
@@ -347,5 +347,14 @@ public class Board extends JComponent {
             sb.append('\n');
         }
         return sb.toString();
+    }
+
+    @Override
+    public Board clone() throws CloneNotSupportedException {
+        Board clone = (Board) super.clone();
+        clone.pieces = pieces.clone();
+        clone.marginY = marginY;
+        clone.marginX = marginX;
+        return clone;
     }
 }
