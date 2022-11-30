@@ -11,6 +11,8 @@ public class Board extends JComponent {
     final int marginY;
     GameFrame gameFrame;
 
+    int[][] sorted;
+
     public Board(Piece[] pieces, int marginX, int marginY) {
         this.pieces = pieces;
         this.marginX = marginX;

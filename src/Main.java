@@ -99,4 +99,29 @@ public class Main {
         }
         return new Board(pieces.toArray(new Piece[0]), boardArray[0].length - 1, boardArray.length - 1);
     }
+
+    public static int[][] sort2D(int[][] boardArray) {
+        ArrayList<Integer> values = new ArrayList<>();
+        for (int[] ints : boardArray) {
+            for (int j = 0; j < boardArray[0].length; j++) {
+                int val = ints[j];
+                if (val != 0) {
+                    values.add(val);
+                }
+            }
+        }
+        values.sort(Comparator.naturalOrder());
+        int[][] sorted = new int[boardArray.length][boardArray[0].length];
+        Iterator<Integer> integerIterator = values.iterator();
+        for (int i = 0; i < boardArray.length; i++) {
+            for (int j = 0; j < boardArray[0].length; j++) {
+                if (integerIterator.hasNext()) {
+                    sorted[i][j] = integerIterator.next();
+                } else {
+                    sorted[i][j] = 0;
+                }
+            }
+        }
+        return sorted;
+    }
 }
