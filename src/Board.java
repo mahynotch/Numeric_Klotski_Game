@@ -33,8 +33,7 @@ public class Board extends JComponent {
     }
 
     public void findAllPieceByValue(ArrayList<Piece> pieceList, int key) {
-        Piece piece = null;
-        Boolean bool = false;
+        boolean bool = false;
         for (Piece i : pieces) {
             for (int j : i.getValue()) {
                 if (j == key && !pieceList.contains(i)) {
