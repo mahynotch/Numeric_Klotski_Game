@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.ArrayList;
 
 //本类用以储存棋子
 public class Board extends JComponent {
@@ -28,7 +29,25 @@ public class Board extends JComponent {
                 }
             }
         }
-        throw new IllegalArgumentException("No piece of such key");
+        return null;
+    }
+
+    public void findAllPieceByValue(ArrayList<Piece> pieceList, int key) {
+        Piece piece = null;
+        Boolean bool = false;
+        for (Piece i : pieces) {
+            for (int j : i.getValue()) {
+                if (j == key && !pieceList.contains(i)) {
+                    pieceList.add(i);
+                    bool = true;
+                    break;
+                }
+            }
+        }
+        if (!bool) {
+            return;
+        }
+        findAllPieceByValue(pieceList, key);
     }
 
     public Piece[] getPieces() {
@@ -80,12 +99,18 @@ public class Board extends JComponent {
             default:
                 aim = findPieceByCoordinate(x, y);
         }
-        switch (piece.pieceType) {
-            case BLANK: {
-                Piece temp = piece;
-                piece = aim;
-                aim = temp;
+        if (piece.pieceType == PieceType.BLANK) {
+            if (aim.pieceType == PieceType.BLANK) {
+                piece.move(direction);
+                aim.move(counterDirection(direction));
+                return;
             }
+            Piece temp = piece;
+            piece = aim;
+            aim = temp;
+            direction = counterDirection(direction);
+        }
+        switch (piece.pieceType) {
             case ONETOONE: {
                 piece.move(direction);
                 aim.move(counterDirection(direction));
@@ -220,38 +245,38 @@ public class Board extends JComponent {
             default:
                 aim = findPieceByCoordinate(x, y);
         }
-        switch (aim.pieceType) {
-            case ONETOONE:
-            case BLANK: {
-                return true;
-            }
-            case TWOTOONE: {
-                if (direction == Direction.UP | direction == Direction.DOWN) {
-                    return true;
-                } else {
-                    return findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK;
-                }
-            }
-            case ONETOTWO: {
-                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
-                    return true;
-                } else {
-                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK;
-                }
-            }
-            case TWOTOTWO: {
-                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
-                    if (findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK) {
-                        return true;
-                    }
-                } else {
-                    if (findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        return moveable(aim, counterDirection(direction));
+//        switch (aim.pieceType) {
+//            case ONETOONE:
+//            case BLANK: {
+//                return true;
+//            }
+//            case TWOTOONE: {
+//                if (direction == Direction.UP | direction == Direction.DOWN) {
+//                    return true;
+//                } else {
+//                    return findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK;
+//                }
+//            }
+//            case ONETOTWO: {
+//                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+//                    return true;
+//                } else {
+//                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK;
+//                }
+//            }
+//            case TWOTOTWO: {
+//                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+//                    if (findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK) {
+//                        return true;
+//                    }
+//                } else {
+//                    if (findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK) {
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
     }
 
     public Direction counterDirection(Direction direction) {

@@ -1,4 +1,7 @@
+import edu.princeton.cs.algs4.DepthFirstSearch;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -53,6 +56,7 @@ public class RandomBoardGenerator {
             }
         }
         Board board = Main.arrayToBoard(hashMap, pieceArray);
+        randomize(board);
         System.out.println(board);
     }
 
@@ -84,4 +88,21 @@ public class RandomBoardGenerator {
         }
         throw new IllegalArgumentException("No such value in array: " + value);
     }
+
+    public static void randomize(Board board) {
+        ArrayList<Piece> pieces = new ArrayList<>();
+        board.findAllPieceByValue(pieces, 0);
+        for (Piece piece : pieces) {
+            for (int i = 0; i < 100; i++) {
+                Direction[] directions = new Direction[]{Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
+                Random rand = new Random();
+                Direction direction = directions[rand.nextInt(4)];
+                if (board.zeroMovable(piece, direction)) {
+                    board.move(piece, direction);
+                }
+            }
+        }
+    }
+
+
 }
