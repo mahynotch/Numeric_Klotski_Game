@@ -1,23 +1,65 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Collection;
 
 public class RandomBoardGenerator {
     public static void main(String[] args) {
         Random random = new Random();
-        int[][] pieceArray = arrayGenerate(random.nextInt(5) + 1, random.nextInt(5) + 1);
+        int[][] pieceArray = arrayGenerate(random.nextInt(4) + 2, random.nextInt(4) + 2);
         int numOfMorbid = random.nextInt(4);
         int[] morbids = new int[numOfMorbid];
         for (int i = 0; i < numOfMorbid; i++) {
-            morbids[i] = random.nextInt(pieceArray.length * pieceArray[0].length);
+            morbids[i] = random.nextInt((pieceArray.length - 1) * pieceArray[0].length - 1) + 1;
         }
+        HashMap<Integer, String> hashMap = new HashMap<>();
+        ArrayList<Integer> occupied = new ArrayList<>();
+        for (int i : morbids) {
+            ArrayList<PieceType> pieceTypes = new ArrayList<>();
+            int[] xAndY = findValue(pieceArray, i);
+            int x = xAndY[0];
+            int y = xAndY[1];
+            if (x < pieceArray[0].length - 1) {
+                if (pieceArray[y][x + 1] != 0 && !occupied.contains(pieceArray[y][x + 1])) {
+                    pieceTypes.add(PieceType.ONETOTWO);
+                    if (pieceArray[y + 1][x] != 0 && !occupied.contains(pieceArray[y + 1][x]) && pieceArray[y + 1][x + 1] != 0 && !occupied.contains(pieceArray[y + 1][x + 1])) {
+                        pieceTypes.add(PieceType.TWOTOTWO);
+                    }
+                }
+            }
+            if (pieceArray[y + 1][x] != 0 && !occupied.contains(pieceArray[y + 1][x])) {
+                pieceTypes.add(PieceType.TWOTOONE);
+            }
+            if (pieceTypes.size() != 0) {
+                PieceType pieceType = pieceTypes.get(random.nextInt(pieceTypes.size()));
+                switch (pieceType) {
+                    case TWOTOONE:
+                        hashMap.put(i, "2*1");
+                        occupied.add(i);
+                        occupied.add(pieceArray[y + 1][x]);
+                        break;
+                    case ONETOTWO:
+                        hashMap.put(i, "1*2");
+                        occupied.add(i);
+                        occupied.add(pieceArray[y][x + 1]);
+                        break;
+                    case TWOTOTWO:
+                        hashMap.put(i, "2*2");
+                        occupied.add(i);
+                        occupied.add(pieceArray[y + 1][x]);
+                        occupied.add(pieceArray[y][x + 1]);
+                        occupied.add(pieceArray[y + 1][x + 1]);
+                        break;
+                }
+            }
+        }
+        Board board = Main.arrayToBoard(hashMap, pieceArray);
+        System.out.println(board);
     }
 
     private static int[][] arrayGenerate(int row, int column) {
         int[][] res = new int[row][column];
         Random random = new Random();
-        int emptyNum = random.nextInt(column);
+        int emptyNum = random.nextInt(column - 1) + 1;
         for (int i = 0; i < row; i++) {
             if (i == row - 1) {
                 for (int j = 0; j < column - emptyNum; j++) {
