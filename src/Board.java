@@ -122,7 +122,8 @@ public class Board extends JComponent {
                     aim.move(counterDirection(direction));
                     aim.move(counterDirection(direction));
                 } else {
-                    findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY()).move(counterDirection(direction));
+                    findPieceByCoordinate(aim.getCoordinate()[0].getX() == piece.getCoordinate()[0].getX() ? aim.getCoordinate()[0].getX() + 1 : aim.getCoordinate()[0].getX() - 1
+                            , aim.getCoordinate()[0].getY()).move(counterDirection(direction));
                     aim.move(counterDirection(direction));
                     piece.move(direction);
                 }
@@ -134,7 +135,8 @@ public class Board extends JComponent {
                     aim.move(counterDirection(direction));
                     aim.move(counterDirection(direction));
                 } else {
-                    findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1).move(counterDirection(direction));
+                    findPieceByCoordinate(aim.getCoordinate()[0].getX()
+                            , aim.getCoordinate()[0].getY() == piece.getCoordinate()[0].getY() ? aim.getCoordinate()[0].getY() + 1 : aim.getCoordinate()[0].getY() - 1).move(counterDirection(direction));
                     aim.move(counterDirection(direction));
                     piece.move(direction);
                 }
@@ -142,14 +144,16 @@ public class Board extends JComponent {
             }
             case TWOTOTWO: {
                 if (direction == Direction.UP | direction == Direction.DOWN) {
-                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY());
+                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX() == piece.getCoordinate()[0].getX() ? aim.getCoordinate()[0].getX() + 1 : aim.getCoordinate()[0].getX() - 1
+                            , aim.getCoordinate()[0].getY());
                     aim.move(counterDirection(direction));
                     aim.move(counterDirection(direction));
                     aim2.move(counterDirection(direction));
                     aim2.move(counterDirection(direction));
                     piece.move(direction);
                 } else {
-                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1);
+                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX()
+                            , aim.getCoordinate()[0].getY() == piece.getCoordinate()[0].getY() ? aim.getCoordinate()[0].getY() + 1 : aim.getCoordinate()[0].getY() - 1);
                     aim.move(counterDirection(direction));
                     aim.move(counterDirection(direction));
                     aim2.move(counterDirection(direction));
@@ -168,7 +172,7 @@ public class Board extends JComponent {
         switch (direction) {
             case LEFT:
                 if (x == 0) return false;
-                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x - 2 : x - 1, y);
+                aim = findPieceByCoordinate(x - 1, y);
                 break;
             case RIGHT:
                 if (x == marginX) return false;
@@ -176,7 +180,7 @@ public class Board extends JComponent {
                 break;
             case UP:
                 if (y == 0) return false;
-                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y - 2 : y - 1);
+                aim = findPieceByCoordinate(x, y - 1);
                 break;
             case DOWN:
                 if (y == marginY) return false;
