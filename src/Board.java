@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -77,7 +79,7 @@ public class Board extends JComponent implements Cloneable {
         throw new IllegalArgumentException("The coordinate is empty");
     }
 
-    public void move(Piece piece, Direction direction) {
+    public void move(Piece piece, @NotNull Direction direction) {
         Coordinate[] Cor = piece.getCoordinate();
         int x = Cor[0].getX();
         int y = Cor[0].getY();
@@ -260,18 +262,16 @@ public class Board extends JComponent implements Cloneable {
         return movable(aim, counterDirection(direction));
     }
 
-    public static Direction counterDirection(Direction direction) {
+    public static Direction counterDirection(@NotNull Direction direction) {
         switch (direction) {
             case RIGHT:
                 return Direction.LEFT;
             case DOWN:
                 return Direction.UP;
-            case UP:
-                return Direction.DOWN;
             case LEFT:
                 return Direction.RIGHT;
             default:
-                return null;
+                return Direction.DOWN;
         }
     }
 
