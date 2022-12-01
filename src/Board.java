@@ -161,11 +161,18 @@ public class Board extends JComponent implements Cloneable {
                 }
             }
         }
-        char dir = direction.toString().charAt(0);
-        steps.add(piece.getValue()[0] + " " + dir);
+        if (steps.size() >= 1) {
+            if (steps.get(steps.size() - 1).equals(piece.getValue()[0] + " " + counterDirection(direction).toString().charAt(0))) {
+                steps.remove(steps.size() - 1);
+            } else {
+                steps.add(piece.getValue()[0] + " " + direction.toString().charAt(0));
+            }
+        } else {
+            steps.add(piece.getValue()[0] + " " + direction.toString().charAt(0));
+        }
     }
 
-    public boolean moveable(Piece piece, Direction direction) {
+    public boolean movable(Piece piece, Direction direction) {
         int x = piece.getCoordinate()[0].getX();
         int y = piece.getCoordinate()[0].getY();
         PieceType pieceType = piece.pieceType;
@@ -250,10 +257,10 @@ public class Board extends JComponent implements Cloneable {
             default:
                 aim = findPieceByCoordinate(x, y);
         }
-        return moveable(aim, counterDirection(direction));
+        return movable(aim, counterDirection(direction));
     }
 
-    public Direction counterDirection(Direction direction) {
+    public static Direction counterDirection(Direction direction) {
         switch (direction) {
             case RIGHT:
                 return Direction.LEFT;
@@ -266,6 +273,16 @@ public class Board extends JComponent implements Cloneable {
             default:
                 return null;
         }
+    }
+
+    public int[][] to2DArray() {
+        int[][] dist = new int[marginY + 1][marginX + 1];
+        for (int i = 0; i < dist.length; i++) {
+            for (int j = 0; j < dist[0].length; j++) {
+                dist[i][j] = findValueByCoordinate(j, i);
+            }
+        }
+        return dist;
     }
 
     @Override

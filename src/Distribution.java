@@ -2,16 +2,9 @@ import java.util.Arrays;
 
 public class Distribution {
     int[][] dist;
-    int[][] sorted;
 
-    public Distribution(Board board, int[][] sorted) {
-        dist = new int[sorted.length][sorted[0].length];
-        for (int i = 0; i < dist.length; i++) {
-            for (int j = 0; j < dist[0].length; j++) {
-                dist[i][j] = board.findValueByCoordinate(j, i);
-            }
-        }
-        this.sorted = sorted;
+    public Distribution(Board board) {
+        dist = board.to2DArray();
     }
 
     @Override

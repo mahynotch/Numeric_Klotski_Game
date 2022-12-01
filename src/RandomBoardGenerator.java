@@ -98,5 +98,6 @@ public class RandomBoardGenerator {
                 }
             }
         }
+        board.steps = new ArrayList<>();
     }
 }

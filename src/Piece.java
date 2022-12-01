@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 //本类为棋子
 public class Piece implements Cloneable {
     private int[] value;
