@@ -13,6 +13,8 @@ public class Board extends JComponent implements Cloneable {
 
     int[][] sorted;
 
+    ArrayList<String> steps = new ArrayList<>();
+
     public Board(Piece[] pieces, int marginX, int marginY) {
         this.pieces = pieces;
         this.marginX = marginX;
@@ -34,21 +36,17 @@ public class Board extends JComponent implements Cloneable {
         return null;
     }
 
-    public void findAllPieceByValue(ArrayList<Piece> pieceList, int key) {
+    public Piece[] findAllPieceByValue(int key) {
+        ArrayList<Piece> pieceList = new ArrayList<>();
         boolean bool = false;
         for (Piece i : pieces) {
             for (int j : i.getValue()) {
                 if (j == key && !pieceList.contains(i)) {
                     pieceList.add(i);
-                    bool = true;
-                    break;
                 }
             }
         }
-        if (!bool) {
-            return;
-        }
-        findAllPieceByValue(pieceList, key);
+        return pieceList.toArray(new Piece[0]);
     }
 
     public Piece[] getPieces() {
@@ -115,7 +113,7 @@ public class Board extends JComponent implements Cloneable {
             case ONETOONE: {
                 piece.move(direction);
                 aim.move(counterDirection(direction));
-                return;
+                break;
             }
             case ONETOTWO: {
                 if (direction == Direction.LEFT | direction == Direction.RIGHT) {
@@ -128,7 +126,7 @@ public class Board extends JComponent implements Cloneable {
                     aim.move(counterDirection(direction));
                     piece.move(direction);
                 }
-                return;
+                break;
             }
             case TWOTOONE: {
                 if (direction == Direction.UP | direction == Direction.DOWN) {
@@ -141,7 +139,7 @@ public class Board extends JComponent implements Cloneable {
                     aim.move(counterDirection(direction));
                     piece.move(direction);
                 }
-                return;
+                break;
             }
             case TWOTOTWO: {
                 if (direction == Direction.UP | direction == Direction.DOWN) {
@@ -163,6 +161,8 @@ public class Board extends JComponent implements Cloneable {
                 }
             }
         }
+        char dir = direction.toString().charAt(0);
+        steps.add(piece.getValue()[0] + " " + dir);
     }
 
     public boolean moveable(Piece piece, Direction direction) {
@@ -177,7 +177,7 @@ public class Board extends JComponent implements Cloneable {
                 break;
             case RIGHT:
                 if (x == marginX) return false;
-                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x + 2 : x + 1, y);
+                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO | piece.pieceType == PieceType.ONETOTWO ? x + 2 : x + 1, y);
                 break;
             case UP:
                 if (y == 0) return false;
@@ -185,7 +185,7 @@ public class Board extends JComponent implements Cloneable {
                 break;
             case DOWN:
                 if (y == marginY) return false;
-                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y + 2 : y + 1);
+                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO | piece.pieceType == PieceType.TWOTOONE ? y + 2 : y + 1);
                 break;
             default:
                 aim = findPieceByCoordinate(x, y);
@@ -251,37 +251,6 @@ public class Board extends JComponent implements Cloneable {
                 aim = findPieceByCoordinate(x, y);
         }
         return moveable(aim, counterDirection(direction));
-//        switch (aim.pieceType) {
-//            case ONETOONE:
-//            case BLANK: {
-//                return true;
-//            }
-//            case TWOTOONE: {
-//                if (direction == Direction.UP | direction == Direction.DOWN) {
-//                    return true;
-//                } else {
-//                    return findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK;
-//                }
-//            }
-//            case ONETOTWO: {
-//                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
-//                    return true;
-//                } else {
-//                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK;
-//                }
-//            }
-//            case TWOTOTWO: {
-//                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
-//                    if (findPieceByCoordinate(x, aim.getCoordinate()[0].getY() == y ? y + 1 : y - 1).pieceType == PieceType.BLANK) {
-//                        return true;
-//                    }
-//                } else {
-//                    if (findPieceByCoordinate(aim.getCoordinate()[0].getX() == x ? x + 1 : x - 1, y).pieceType == PieceType.BLANK) {
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
     }
 
     public Direction counterDirection(Direction direction) {

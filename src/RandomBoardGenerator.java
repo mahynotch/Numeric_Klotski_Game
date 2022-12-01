@@ -1,7 +1,4 @@
-import edu.princeton.cs.algs4.DepthFirstSearch;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -90,8 +87,7 @@ public class RandomBoardGenerator {
     }
 
     public static void randomize(Board board) {
-        ArrayList<Piece> pieces = new ArrayList<>();
-        board.findAllPieceByValue(pieces, 0);
+        Piece[] pieces = board.findAllPieceByValue(0);
         for (Piece piece : pieces) {
             for (int i = 0; i < 10000; i++) {
                 Direction[] directions = new Direction[]{Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
