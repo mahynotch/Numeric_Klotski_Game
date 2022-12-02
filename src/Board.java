@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -12,8 +10,6 @@ public class Board extends JComponent implements Cloneable {
     //纵向边缘
     int marginY;
     GameFrame gameFrame;
-
-    int[][] sorted;
 
     ArrayList<String> steps = new ArrayList<>();
 
@@ -40,7 +36,6 @@ public class Board extends JComponent implements Cloneable {
 
     public Piece[] findAllPieceByValue(int key) {
         ArrayList<Piece> pieceList = new ArrayList<>();
-        boolean bool = false;
         for (Piece i : pieces) {
             for (int j : i.getValue()) {
                 if (j == key && !pieceList.contains(i)) {
@@ -79,7 +74,7 @@ public class Board extends JComponent implements Cloneable {
         throw new IllegalArgumentException("The coordinate is empty");
     }
 
-    public void move(Piece piece, @NotNull Direction direction) {
+    public void move(Piece piece, Direction direction) {
         Coordinate[] Cor = piece.getCoordinate();
         int x = Cor[0].getX();
         int y = Cor[0].getY();
@@ -262,7 +257,7 @@ public class Board extends JComponent implements Cloneable {
         return movable(aim, counterDirection(direction));
     }
 
-    public static Direction counterDirection(@NotNull Direction direction) {
+    public static Direction counterDirection(Direction direction) {
         switch (direction) {
             case RIGHT:
                 return Direction.LEFT;

@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class RandomBoardGenerator {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         Random random = new Random();
         int[][] pieceArray = arrayGenerate(random.nextInt(4) + 2, random.nextInt(4) + 2);
         int numOfMorbid = random.nextInt(4);
@@ -55,6 +55,9 @@ public class RandomBoardGenerator {
         Board board = Main.arrayToBoard(hashMap, pieceArray);
         randomize(board);
         System.out.println(board);
+        KlotskiSolverM solverM = new KlotskiSolverM(board);
+        solverM.solve();
+        System.out.println();
     }
 
     private static int[][] arrayGenerate(int row, int column) {
