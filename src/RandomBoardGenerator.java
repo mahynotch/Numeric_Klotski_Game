@@ -55,12 +55,12 @@ public class RandomBoardGenerator {
         Board board = Main.arrayToBoard(hashMap, pieceArray);
         randomize(board);
         System.out.println(board);
-        KlotskiSolverM solverM = new KlotskiSolverM(board);
+        //KlotskiSolverM solverM = new KlotskiSolverM(board);
         long startTime = System.currentTimeMillis();
-        solverM.solve();
+        //solverM.solve();
         long endTime = System.currentTimeMillis();
         System.out.println(endTime - startTime);
-        System.out.println(solverM.solution.length);
+        //System.out.println(solverM.solution.length);
     }
 
     private static int[][] arrayGenerate(int row, int column) {

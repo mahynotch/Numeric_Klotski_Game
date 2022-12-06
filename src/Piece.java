@@ -118,16 +118,16 @@ public class Piece extends JLabel implements Cloneable {
         return clone;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+       if (this == o) return true;
         if (!(o instanceof Piece)) return false;
         Piece piece = (Piece) o;
         return code.equals(piece.code) &&
                 Arrays.equals(value, piece.value) &&
                 Arrays.equals(coordinate, piece.coordinate) &&
                 pieceType == piece.pieceType;
-    }
+    }*/
 
     @Override
     public int hashCode() {

@@ -13,21 +13,22 @@ public class GameFrame extends JFrame implements ActionListener {
     int marginY;
     Board board;
 
-    public GameFrame(int width, int height, Piece[] pieces, int marginX, int marginY) {
+    public GameFrame(int width, int height, Piece[] pieces, int marginX, int marginY,Board board) {
         setTitle("Numeric Klotski"); //设置标题
         this.WIDTH = width;
         this.HEIGHT = height;
         this.pieces = pieces;
         this.marginX = marginX;
         this.marginY = marginY;
-
+        this.board=board;
 
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null); // Center the window.
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
 
-        Board board = new Board(pieces, marginX, marginY);
+        board = new Board(pieces, marginX, marginY);
+
         board.setGameFrame(this);
         board.setLocation(0, 90);
         board.setSize(500,500);
@@ -53,7 +54,6 @@ public class GameFrame extends JFrame implements ActionListener {
         setVisible(true);
         repaint();
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("clicked");
@@ -83,6 +83,7 @@ public class GameFrame extends JFrame implements ActionListener {
             assert realDirection != null;
             board.move(board.findPieceByValue(movedPiece), realDirection);
             System.out.println(board);
+            //board1.repaint();
         } else if ("Random".equals((cmd))) {
             System.out.println("Generate a solvable board:");
         }

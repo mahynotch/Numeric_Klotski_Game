@@ -23,6 +23,9 @@ public class Board extends JComponent implements Cloneable {
         this.pieces = pieces;
         this.marginX = marginX;
         this.marginY = marginY;
+        for (Piece piece : pieces) {
+            add(piece);
+        }
     }
 
     public void setGameFrame(GameFrame gameFrame) {
@@ -179,6 +182,7 @@ public class Board extends JComponent implements Cloneable {
                     piece.move(direction);
                 }
             }
+
         }
         if (steps.size() >= 1) {
             if (steps.get(steps.size() - 1).equals(piece.getValue()[0] + " " + counterDirection(direction).toString().charAt(0))) {
