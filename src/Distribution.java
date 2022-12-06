@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Distribution {
+public class Distribution implements Comparable<Distribution> {
     int[][] dist;
     int step;
 
@@ -20,5 +20,10 @@ public class Distribution {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(dist);
+    }
+
+    @Override
+    public int compareTo(Distribution o) {
+        return step - o.step;
     }
 }

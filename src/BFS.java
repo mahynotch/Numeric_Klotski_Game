@@ -24,7 +24,7 @@ public class BFS {
             Piece[] zeroPieces = first.findAllPieceByValue(0);
             //遍历所有数字0
             for (Piece piece : zeroPieces) {
-                Piece zeroPiece = piece.clone();
+                Piece zeroPiece = (Piece) piece.clone();
                 //判断四个方向是否可移动，可移动则将移动后的棋盘依次入栈
                 for (int j = 0; j < 4; j++) {
                     Board clone = first.clone();
@@ -116,7 +116,7 @@ public class BFS {
                     .collect(Collectors.toList());
             //遍历所有数字0
             for (Piece piece : zeroPieces) {
-                Piece zeroPiece = piece.clone();
+                Piece zeroPiece = (Piece) piece.clone();
                 //遍历四个方向
                 for (int j = 0; j < 4; j++) {
                     Board clone = first.clone();

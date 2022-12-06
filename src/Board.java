@@ -15,6 +15,7 @@ public class Board extends JComponent implements Cloneable {
     int marginY;
     GameFrame gameFrame;
 
+    int H = 0;
     ArrayList<String> steps = new ArrayList<>();
 
     Direction lastDirection = Direction.NONE;
@@ -439,10 +440,10 @@ public class Board extends JComponent implements Cloneable {
         return numStr + "," + zeroStr;
     }
 
-    public Piece[] cloneOfPieces() {
+    public Piece[] cloneOfPieces() throws CloneNotSupportedException {
         Piece[] newPieces = new Piece[pieces.length];
         for (int i = 0; i < pieces.length; i++) {
-            newPieces[i] = pieces[i].clone();
+            newPieces[i] = (Piece) pieces[i].clone();
         }
         return newPieces;
     }

@@ -41,11 +41,11 @@ public class Main {
         // board.Move(board.findPieceByValue(0),Direction.UP);
         //System.out.println(board);
         //打开Frame并传入数据
-        GameFrame gameFrame = new GameFrame(514, 627, pieces1,column-1,row-1,board);
+        GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
         gameFrame.setVisible(true);
-        //KlotskiSolverM solverM = new KlotskiSolverM(board);
-        //solverM.solve();
-        //System.out.println(solverM.solution.length);
+        AStarSolver solverM = new AStarSolver(board);
+        solverM.solve();
+        System.out.println(solverM.solution.length);
     }
 
     static Board arrayToBoard(HashMap<Integer, String> hashMap, int[][] boardArray) {
