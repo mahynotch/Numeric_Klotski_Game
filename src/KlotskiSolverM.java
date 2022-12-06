@@ -7,7 +7,7 @@ import java.util.Random;
 public class KlotskiSolverM {
     Board board;
     int maxStep = 1000;
-    HashMap<Integer, Distribution> distributions = new HashMap<>();
+    HashMap<Distribution, Distribution> distributions = new HashMap<>();
     int[][] sorted;
     int[] blankIndexList;
     String[] solution = null;
@@ -54,10 +54,11 @@ public class KlotskiSolverM {
                 }
                 isSorted[i][j] = true;
             }
+            singleSolverSimplifier(i, sorted[0].length - 2, sorted[i][sorted[0].length - 1]);
             singleSolverSimplifier(i);
             isSorted[i][isSorted[0].length - 1] = true;
             isSorted[i][isSorted[0].length - 2] = true;
-            for (int j = 0; j < sorted[0].length - 2; j++) {
+            for (int j = 0; j < sorted.length - 2; j++) {
                 Distribution distribution = new Distribution(board, 0);
                 if (sorted[i][j] != distribution.dist[i][j]) {
                     int present = sorted[i][j];
@@ -67,6 +68,7 @@ public class KlotskiSolverM {
                 }
                 isSorted[i][j] = true;
             }
+            singleSolverSimplifier(i, sorted.length - 2, sorted[sorted.length - 1][i]);
             singleSolverSimplifier(i, 0);
             isSorted[isSorted.length - 1][i] = true;
             isSorted[isSorted.length - 2][i] = true;
@@ -76,7 +78,7 @@ public class KlotskiSolverM {
 
     public void singleSolverSimplifier(int x, int y, int value) throws CloneNotSupportedException {
         Distribution distribution = new Distribution(board, 0);
-        distributions.put(distribution.hashCode(), distribution);
+        distributions.put(distribution, distribution);
         Queue<Board> queue = new Queue<>();
         queue.enqueue(board);
         Direction[] directions = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
@@ -85,9 +87,6 @@ public class KlotskiSolverM {
             for (Direction direction : directions) {
                 Board newBoard = present.clone();
                 Piece blank = newBoard.pieces[blankIndexList[0]];
-                if (direction == newBoard.lastDirection) {
-                    continue;
-                }
                 Object[] objects = newBoard.zeroMovableWithAim(blank, direction);
                 if ((Boolean) objects[0]) {
                     Coordinate temp = ((Piece) objects[1]).coordinate[0];
@@ -99,13 +98,14 @@ public class KlotskiSolverM {
                     if (distribution.dist[y][x] == value) {
                         board = newBoard;
                         distributions = new HashMap<>();
+                        System.gc();
                         return;
                     }
-                    if (distributions.containsKey(distribution.hashCode())) {
+                    if (distributions.containsKey(distribution)) {
                         continue;
                     }
                     queue.enqueue(newBoard);
-                    distributions.put(distribution.hashCode(), distribution);
+                    distributions.put(distribution, distribution);
                 }
             }
         }
@@ -113,7 +113,7 @@ public class KlotskiSolverM {
 
     public void singleSolverSimplifier(int y) throws CloneNotSupportedException {
         Distribution distribution = new Distribution(board, 0);
-        distributions.put(distribution.hashCode(), distribution);
+        distributions.put(distribution, distribution);
         Queue<Board> queue = new Queue<>();
         queue.enqueue(board);
         Direction[] directions = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
@@ -122,9 +122,6 @@ public class KlotskiSolverM {
             for (Direction direction : directions) {
                 Board newBoard = present.clone();
                 Piece blank = newBoard.pieces[blankIndexList[0]];
-                if (direction == newBoard.lastDirection) {
-                    continue;
-                }
                 Object[] objects = newBoard.zeroMovableWithAim(blank, direction);
                 if ((Boolean) objects[0]) {
                     Coordinate temp = ((Piece) objects[1]).coordinate[0];
@@ -136,13 +133,14 @@ public class KlotskiSolverM {
                     if (intArrayEqual(distribution.dist[y], sorted[y])) {
                         board = newBoard;
                         distributions = new HashMap<>();
+                        System.gc();
                         return;
                     }
-                    if (distributions.containsKey(distribution.hashCode())) {
+                    if (distributions.containsKey(distribution)) {
                         continue;
                     }
                     queue.enqueue(newBoard);
-                    distributions.put(distribution.hashCode(), distribution);
+                    distributions.put(distribution, distribution);
                 }
             }
         }
@@ -150,7 +148,7 @@ public class KlotskiSolverM {
 
     public void singleSolverSimplifier(int x, int justSign) throws CloneNotSupportedException {
         Distribution distribution = new Distribution(board, 0);
-        distributions.put(distribution.hashCode(), distribution);
+        distributions.put(distribution, distribution);
         Queue<Board> queue = new Queue<>();
         queue.enqueue(board);
         Direction[] directions = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
@@ -159,9 +157,6 @@ public class KlotskiSolverM {
             for (Direction direction : directions) {
                 Board newBoard = present.clone();
                 Piece blank = newBoard.pieces[blankIndexList[0]];
-                if (direction == newBoard.lastDirection) {
-                    continue;
-                }
                 Object[] objects = newBoard.zeroMovableWithAim(blank, direction);
                 if ((Boolean) objects[0]) {
                     Coordinate temp = ((Piece) objects[1]).coordinate[0];
@@ -173,13 +168,14 @@ public class KlotskiSolverM {
                     if (intArrayEqualColumn(sorted, distribution.dist, x)) {
                         board = newBoard;
                         distributions = new HashMap<>();
+                        System.gc();
                         return;
                     }
-                    if (distributions.containsKey(distribution.hashCode())) {
+                    if (distributions.containsKey(distribution)) {
                         continue;
                     }
                     queue.enqueue(newBoard);
-                    distributions.put(distribution.hashCode(), distribution);
+                    distributions.put(distribution, distribution);
                 }
             }
         }
@@ -201,15 +197,15 @@ public class KlotskiSolverM {
         if (step >= maxStep) {
             return;
         }
-        Distribution lastSame = distributions.get(distribution.hashCode());
+        Distribution lastSame = distributions.get(distribution);
         if (lastSame != null) {
             if (lastSame.step < step) {
                 return;
             } else {
-                distributions.remove(distribution.hashCode());
+                distributions.remove(distribution);
             }
         }
-        distributions.put(distribution.hashCode(), distribution);
+        distributions.put(distribution, distribution);
         Direction[] directions = {Direction.DOWN, Direction.RIGHT, Direction.UP, Direction.LEFT};
         for (int i = 0; i < 4; i++) {
             Direction direction = directions[i];
@@ -227,7 +223,7 @@ public class KlotskiSolverM {
 
     public void singleSolverBFS() throws CloneNotSupportedException {
         Distribution distribution = new Distribution(board, 0);
-        distributions.put(distribution.hashCode(), distribution);
+        distributions.put(distribution, distribution);
         Queue<Board> queue = new Queue<>();
         queue.enqueue(board);
         Direction[] directions = {Direction.DOWN, Direction.RIGHT, Direction.UP, Direction.LEFT};
@@ -246,11 +242,11 @@ public class KlotskiSolverM {
                         solution = newBoard.steps.toArray(new String[0]);
                         return;
                     }
-                    if (distributions.containsKey(distribution.hashCode())) {
+                    if (distributions.containsKey(distribution)) {
                         continue;
                     }
                     queue.enqueue(newBoard);
-                    distributions.put(distribution.hashCode(), distribution);
+                    distributions.put(distribution, distribution);
                 }
             }
         }
@@ -258,13 +254,18 @@ public class KlotskiSolverM {
 
     public void multiSolver() throws CloneNotSupportedException {
         int x, y;
+        if (sorted.length <= 2 || sorted[0].length <= 2) {
+            multiSolverBFS();
+            return;
+        }
         isSorted = new boolean[sorted.length][sorted[0].length];
         for (int i = 0; i < sorted.length; i++) {
             for (int j = 0; j < sorted[0].length; j++) {
                 isSorted[i][j] = false;
             }
         }
-        for (int i = 0; i < sorted.length - 2; i++) {
+        int ind = sorted.length < sorted[0].length ? sorted.length - 2 : sorted[0].length - 2;
+        for (int i = 0; i < ind; i++) {
             for (int j = 0; j < sorted[0].length; j++) {
                 Distribution distribution = new Distribution(board, 0);
                 if (sorted[i][j] != distribution.dist[i][j]) {
@@ -272,7 +273,16 @@ public class KlotskiSolverM {
                     x = j;
                     y = i;
                     multiSolverSimplifier(x, y, present);
-                    distributions = new HashMap<>();
+                }
+                isSorted[i][j] = true;
+            }
+            for (int j = 0; j < sorted[0].length; j++) {
+                Distribution distribution = new Distribution(board, 0);
+                if (sorted[i][j] != distribution.dist[i][j]) {
+                    int present = sorted[i][j];
+                    x = j;
+                    y = i;
+                    multiSolverSimplifier(x, y, present);
                 }
                 isSorted[i][j] = true;
             }
@@ -282,16 +292,16 @@ public class KlotskiSolverM {
 
     public void multiSolverSimplifier(int x, int y, int value) throws CloneNotSupportedException {
         Distribution distribution = new Distribution(board, 0);
-        distributions.put(distribution.hashCode(), distribution);
+        distributions.put(distribution, distribution);
         Queue<Board> queue = new Queue<>();
         queue.enqueue(board);
         Direction[] directions = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
         while (true) {
             Board present = queue.dequeue();
-            for (int i = 0; i < blankIndexList.length; i++) {
+            for (int j : blankIndexList) {
                 for (Direction direction : directions) {
                     Board newBoard = present.clone();
-                    Piece blank = newBoard.pieces[blankIndexList[i]];
+                    Piece blank = newBoard.pieces[j];
                     if (direction == newBoard.lastDirection) {
                         continue;
                     }
@@ -307,11 +317,11 @@ public class KlotskiSolverM {
                             board = newBoard;
                             return;
                         }
-                        if (distributions.containsKey(distribution.hashCode())) {
+                        if (distributions.containsKey(distribution)) {
                             continue;
                         }
                         queue.enqueue(newBoard);
-                        distributions.put(distribution.hashCode(), distribution);
+                        distributions.put(distribution, distribution);
                     }
                 }
             }
@@ -320,16 +330,20 @@ public class KlotskiSolverM {
 
     public void multiSolverBFS() throws CloneNotSupportedException {
         Distribution distribution = new Distribution(board, 0);
-        distributions.put(distribution.hashCode(), distribution);
+        if (Arrays.deepEquals(distribution.dist, sorted)) {
+            solution = board.steps.toArray(new String[0]);
+            return;
+        }
+        distributions.put(distribution, distribution);
         Queue<Board> queue = new Queue<>();
         queue.enqueue(board);
         Direction[] directions = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
         while (true) {
             Board present = queue.dequeue();
-            for (int i = 0; i < blankIndexList.length; i++) {
+            for (int j : blankIndexList) {
                 for (Direction direction : directions) {
                     Board newBoard = present.clone();
-                    Piece blank = newBoard.pieces[blankIndexList[i]];
+                    Piece blank = newBoard.pieces[j];
                     if (direction == newBoard.lastDirection) {
                         continue;
                     }
@@ -346,11 +360,11 @@ public class KlotskiSolverM {
                             board = newBoard;
                             return;
                         }
-                        if (distributions.containsKey(distribution.hashCode())) {
+                        if (distributions.containsKey(distribution)) {
                             continue;
                         }
                         queue.enqueue(newBoard);
-                        distributions.put(distribution.hashCode(), distribution);
+                        distributions.put(distribution, distribution);
                     }
                 }
             }

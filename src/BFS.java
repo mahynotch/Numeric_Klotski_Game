@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BFS {
-    public static Board bfs(Board board) {
+    public static Board bfs(Board board) throws CloneNotSupportedException {
         //存储棋盘状态
         List<String> boardStatus = new ArrayList<>();
         //队列
@@ -94,7 +94,7 @@ public class BFS {
      * @param target  终点
      * @return
      */
-    public static Board bfs(Board board, List<String> fixList, int value, Coordinate target) {
+    public static Board bfs(Board board, List<String> fixList, int value, Coordinate target) throws CloneNotSupportedException {
         //存储棋盘状态
         List<String> boardStatus = new ArrayList<>();
         //队列
@@ -177,13 +177,14 @@ public class BFS {
         }
         return null;
     }
+
     /**
      * 下移一格
      *
      * @param board 棋盘
      * @param first 移动目标
      */
-    public static Boolean moveDown(Board board, List<String> fixList, Piece first) {
+    public static Boolean moveDown(Board board, List<String> fixList, Piece first) throws CloneNotSupportedException {
         int firstX = first.getCoordinate()[0].getX();
         int firstY = first.getCoordinate()[0].getY();
         int firstHeight = first.getCoordinate()[first.getCoordinate().length - 1].getY() - firstY + 1;
@@ -226,7 +227,7 @@ public class BFS {
      * @param board 棋盘
      * @param first 移动目标
      */
-    public static Boolean moveLeft(Board board, List<String> fixList, Piece first) {
+    public static Boolean moveLeft(Board board, List<String> fixList, Piece first) throws CloneNotSupportedException {
         int firstX = first.getCoordinate()[0].getX();
         int firstY = first.getCoordinate()[0].getY();
         int firstHeight = first.getCoordinate()[first.getCoordinate().length - 1].getY() - firstY + 1;
@@ -270,7 +271,7 @@ public class BFS {
      * @param board 棋盘
      * @param first 移动目标
      */
-    public static Boolean moveRight(Board board, List<String> fixList, Piece first) {
+    public static Boolean moveRight(Board board, List<String> fixList, Piece first) throws CloneNotSupportedException {
         int firstX = first.getCoordinate()[0].getX();
         int firstY = first.getCoordinate()[0].getY();
         int firstHeight = first.getCoordinate()[first.getCoordinate().length - 1].getY() - firstY + 1;
@@ -314,7 +315,7 @@ public class BFS {
      * @param board 棋盘
      * @param first 移动目标
      */
-    public static Boolean moveUp(Board board, List<String> fixList, Piece first) {
+    public static Boolean moveUp(Board board, List<String> fixList, Piece first) throws CloneNotSupportedException {
         int firstX = first.getCoordinate()[0].getX();
         int firstY = first.getCoordinate()[0].getY();
         int firstHeight = first.getCoordinate()[first.getCoordinate().length - 1].getY() - firstY + 1;

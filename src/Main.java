@@ -45,7 +45,7 @@ public class Main {
         gameFrame.setVisible(true);
 //        Gam
         KlotskiSolverM solverM = new KlotskiSolverM(board);
-        solverM.singleSolver();
+        solverM.solve();
         System.out.println(solverM.solution.length);
     }
 
