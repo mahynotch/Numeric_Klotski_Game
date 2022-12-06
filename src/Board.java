@@ -2,6 +2,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 //本类用以储存棋子
 public class Board extends JComponent implements Cloneable {
@@ -86,80 +89,210 @@ public class Board extends JComponent implements Cloneable {
         Coordinate[] Cor = piece.getCoordinate();
         int x = Cor[0].getX();
         int y = Cor[0].getY();
+        //获取棋盘中的对象
+        piece = findPieceByCoordinate(x, y);
         Piece aim;
         switch (direction) {
             case LEFT:
-                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x - 2 : x - 1, y);
+                aim = findPieceByCoordinate(x - 1, y);
                 break;
             case RIGHT:
-                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO ? x + 2 : x + 1, y);
+                aim = findPieceByCoordinate(piece.pieceType == PieceType.TWOTOTWO || piece.pieceType == PieceType.ONETOTWO ? x + 2 : x + 1, y);
                 break;
             case UP:
-                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y - 2 : y - 1);
+                aim = findPieceByCoordinate(x, y - 1);
                 break;
             case DOWN:
-                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO ? y + 2 : y + 1);
+                aim = findPieceByCoordinate(x, piece.pieceType == PieceType.TWOTOTWO || piece.pieceType == PieceType.TWOTOONE ? y + 2 : y + 1);
                 break;
             default:
                 aim = findPieceByCoordinate(x, y);
         }
-        if (piece.pieceType == PieceType.BLANK) {
-            if (aim.pieceType == PieceType.BLANK) {
-                piece.move(direction);
-                aim.move(counterDirection(direction));
-                return;
-            }
-            Piece temp = piece;
-            piece = aim;
-            aim = temp;
-            direction = counterDirection(direction);
-        }
         switch (piece.pieceType) {
-            case ONETOONE: {
-                piece.move(direction);
-                aim.move(counterDirection(direction));
-                break;
+            case BLANK: {
+                switch (aim.pieceType) {
+                    case ONETOONE:
+                    case BLANK: {
+                        piece.move(direction);
+                        aim.move(counterDirection(direction));
+                        break;
+                    }
+                    case ONETOTWO: {
+                        if (direction == Direction.UP || direction == Direction.DOWN) {
+                            //纵向移动需判断当前数字块的左侧或右侧是否有数字0
+                            Piece next;
+                            if (x == aim.coordinate[0].getX()) {
+                                //当前数字块在目标的左边，获取当前数字块右侧的数字块
+                                next = findPieceByCoordinate(x + 1, y);
+                            } else {
+                                //当前数字块在目标的右边，获取当前数字块左侧的数字块
+                                next = findPieceByCoordinate(x - 1, y);
+                            }
+                            if (next.getValue()[0] == 0) {
+                                piece.move(direction);
+                                next.move(direction);
+                                aim.move(counterDirection(direction));
+                            }
+                        } else {
+                            piece.move(direction);
+                            piece.move(direction);
+                            aim.move(counterDirection(direction));
+                        }
+                        break;
+                    }
+                    case TWOTOONE: {
+                        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                            //横向移动需判断当前数字块的上侧或下侧是否有数字0
+                            Piece next;
+                            if (y == aim.coordinate[0].getY()) {
+                                //当前数字块在目标的上边，获取当前数字块下侧的数字块
+                                next = findPieceByCoordinate(x, y + 1);
+                            } else {
+                                //当前数字块在目标的下边，获取当前数字块上侧的数字块
+                                next = findPieceByCoordinate(x, y - 1);
+                            }
+                            if (next.getValue()[0] == 0) {
+                                piece.move(direction);
+                                next.move(direction);
+                                aim.move(counterDirection(direction));
+                            }
+                        } else {
+                            piece.move(direction);
+                            piece.move(direction);
+                            aim.move(counterDirection(direction));
+                        }
+                        break;
+                    }
+                    case TWOTOTWO: {
+                        Piece next;
+                        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                            //横向移动需判断当前数字块的上侧或下侧是否有数字0
+                            if (y == aim.coordinate[0].getY()) {
+                                //当前数字块在目标的上边，获取当前数字块下侧的数字块
+                                next = findPieceByCoordinate(x, y + 1);
+                            } else {
+                                //当前数字块在目标的下边，获取当前数字块上侧的数字块
+                                next = findPieceByCoordinate(x, y - 1);
+                            }
+                        } else {
+                            //纵向移动需判断当前数字块的左侧或右侧是否有数字0
+                            if (x == aim.coordinate[0].getX()) {
+                                //当前数字块在目标的左边，获取当前数字块右侧的数字块
+                                next = findPieceByCoordinate(x + 1, y);
+                            } else {
+                                //当前数字块在目标的右边，获取当前数字块左侧的数字块
+                                next = findPieceByCoordinate(x - 1, y);
+                            }
+                        }
+                        if (next.getValue()[0] == 0) {
+                            piece.move(direction);
+                            piece.move(direction);
+                            next.move(direction);
+                            next.move(direction);
+                            aim.move(counterDirection(direction));
+                        }
+                        break;
+                    }
+                }
             }
-            case ONETOTWO: {
-                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
+            case ONETOONE: {
+                if (aim.pieceType == PieceType.BLANK) {
                     piece.move(direction);
                     aim.move(counterDirection(direction));
-                    aim.move(counterDirection(direction));
-                } else {
-                    findPieceByCoordinate(aim.getCoordinate()[0].getX() == piece.getCoordinate()[0].getX() ? aim.getCoordinate()[0].getX() + 1 : aim.getCoordinate()[0].getX() - 1
-                            , aim.getCoordinate()[0].getY()).move(counterDirection(direction));
-                    aim.move(counterDirection(direction));
-                    piece.move(direction);
                 }
                 break;
             }
             case TWOTOONE: {
-                if (direction == Direction.UP | direction == Direction.DOWN) {
-                    piece.move(direction);
-                    aim.move(counterDirection(direction));
-                    aim.move(counterDirection(direction));
+                if (direction == Direction.UP || direction == Direction.DOWN) {
+                    if (aim.pieceType == PieceType.BLANK) {
+                        piece.move(direction);
+                        aim.move(counterDirection(direction));
+                        aim.move(counterDirection(direction));
+                    }
                 } else {
-                    findPieceByCoordinate(aim.getCoordinate()[0].getX()
-                            , aim.getCoordinate()[0].getY() == piece.getCoordinate()[0].getY() ? aim.getCoordinate()[0].getY() + 1 : aim.getCoordinate()[0].getY() - 1).move(counterDirection(direction));
-                    aim.move(counterDirection(direction));
-                    piece.move(direction);
+                    if (aim.pieceType == PieceType.BLANK) {
+                        //左右移动需获取目标的上侧或下侧是否为数字0
+                        Piece next;
+                        int aimX = aim.getCoordinate()[0].getX();
+                        int aimY = aim.getCoordinate()[0].getY();
+                        if (aimY == piece.coordinate[0].getY()) {
+                            //目标在当前数字块的上边，获取目标下侧的数字块
+                            next = findPieceByCoordinate(aimX, aimY + 1);
+                        } else {
+                            //目标在当前数字块的下边，获取目标上侧的数字块
+                            next = findPieceByCoordinate(aimX, aimY - 1);
+                        }
+                        if (next.getValue()[0] == 0) {
+                            piece.move(direction);
+                            aim.move(counterDirection(direction));
+                            next.move(counterDirection(direction));
+                        }
+                    }
                 }
                 break;
             }
-            case TWOTOTWO: {
-                Piece aim2;
-                if (direction == Direction.UP | direction == Direction.DOWN) {
-                    aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX() == piece.getCoordinate()[0].getX() ? aim.getCoordinate()[0].getX() + 1 : aim.getCoordinate()[0].getX() - 1
-                            , aim.getCoordinate()[0].getY());
+            case ONETOTWO: {
+                if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                    if (aim.pieceType == PieceType.BLANK) {
+                        piece.move(direction);
+                        aim.move(counterDirection(direction));
+                        aim.move(counterDirection(direction));
+                    }
                 } else {
-                    aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX()
-                            , aim.getCoordinate()[0].getY() == piece.getCoordinate()[0].getY() ? aim.getCoordinate()[0].getY() + 1 : aim.getCoordinate()[0].getY() - 1);
+                    if (aim.pieceType == PieceType.BLANK) {
+                        //纵向移动需判断目标块的左侧或右侧是否有数字0
+                        Piece next;
+                        int aimX = aim.getCoordinate()[0].getX();
+                        int aimY = aim.getCoordinate()[0].getY();
+                        if (aimX == piece.coordinate[0].getX()) {
+                            //目标在当前数字块的左边，获取目标右侧的数字块
+                            next = findPieceByCoordinate(aimX + 1, aimY);
+                        } else {
+                            //目标在当前数字块的右边，获取目标左侧的数字块
+                            next = findPieceByCoordinate(aimX - 1, aimY);
+                        }
+                        if (next.getValue()[0] == 0) {
+                            piece.move(direction);
+                            aim.move(counterDirection(direction));
+                            next.move(counterDirection(direction));
+                        }
+                    }
+                    break;
                 }
-                aim.move(counterDirection(direction));
-                aim.move(counterDirection(direction));
-                aim2.move(counterDirection(direction));
-                aim2.move(counterDirection(direction));
-                piece.move(direction);
+            }
+            case TWOTOTWO: {
+                if (aim.pieceType == PieceType.BLANK) {
+                    Piece next;
+                    int aimX = aim.getCoordinate()[0].getX();
+                    int aimY = aim.getCoordinate()[0].getY();
+                    if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                        //横向移动需判断目标块的上侧或下侧是否有数字0
+                        if (aimY == piece.coordinate[0].getY()) {
+                            //目标在当前数字块的上边，获取目标下侧的数字块
+                            next = findPieceByCoordinate(aimX, aimY + 1);
+                        } else {
+                            //目标在当前数字块的下边，获取目标上侧的数字块
+                            next = findPieceByCoordinate(aimX, aimY - 1);
+                        }
+                    } else {
+                        //纵向移动需判断目标块的左侧或右侧是否有数字0
+                        if (aimX == piece.coordinate[0].getX()) {
+                            //目标在当前数字块的左边，获取目标右侧的数字块
+                            next = findPieceByCoordinate(aimX + 1, aimY);
+                        } else {
+                            //目标在当前数字块的右边，获取目标左侧的数字块
+                            next = findPieceByCoordinate(aimX - 1, aimY);
+                        }
+                    }
+                    if (next.getValue()[0] == 0) {
+                        piece.move(direction);
+                        aim.move(counterDirection(direction));
+                        aim.move(counterDirection(direction));
+                        next.move(counterDirection(direction));
+                        next.move(counterDirection(direction));
+                    }
+                }
+                break;
             }
         }
         if (steps.size() >= 1) {
@@ -198,34 +331,142 @@ public class Board extends JComponent implements Cloneable {
             default:
                 aim = findPieceByCoordinate(x, y);
         }
-        if (aim.pieceType != PieceType.BLANK) {
-            return false;
-        }
+
         switch (pieceType) {
-            case ONETOONE:
             case BLANK: {
-                return true;
+                switch (aim.pieceType) {
+                    case ONETOONE:
+                    case BLANK:
+                        return true;
+                    case ONETOTWO: {
+                        if (direction == Direction.UP || direction == Direction.DOWN) {
+                            //纵向移动需判断当前数字块的左侧或右侧是否有数字0
+                            Piece next;
+                            if (x == aim.coordinate[0].getX()) {
+                                //当前数字块在目标的左边，获取当前数字块右侧的数字块
+                                next = findPieceByCoordinate(x + 1, y);
+                            } else {
+                                //当前数字块在目标的右边，获取当前数字块左侧的数字块
+                                next = findPieceByCoordinate(x - 1, y);
+                            }
+                            return next.getValue()[0] == 0;
+                        } else {
+                            return true;
+                        }
+                    }
+                    case TWOTOONE: {
+                        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                            //横向移动需判断当前数字块的上侧或下侧是否有数字0
+                            Piece next;
+                            if (y == aim.coordinate[0].getY()) {
+                                //当前数字块在目标的上边，获取当前数字块下侧的数字块
+                                next = findPieceByCoordinate(x, y + 1);
+                            } else {
+                                //当前数字块在目标的下边，获取当前数字块上侧的数字块
+                                next = findPieceByCoordinate(x, y - 1);
+                            }
+                            return next.getValue()[0] == 0;
+                        } else {
+                            return true;
+                        }
+                    }
+                    case TWOTOTWO: {
+                        Piece next;
+                        if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                            //横向移动需判断当前数字块的上侧或下侧是否有数字0
+                            if (y == aim.coordinate[0].getY()) {
+                                //当前数字块在目标的上边，获取当前数字块下侧的数字块
+                                next = findPieceByCoordinate(x, y + 1);
+                            } else {
+                                //当前数字块在目标的下边，获取当前数字块上侧的数字块
+                                next = findPieceByCoordinate(x, y - 1);
+                            }
+                        } else {
+                            //纵向移动需判断当前数字块的左侧或右侧是否有数字0
+                            if (x == aim.coordinate[0].getX()) {
+                                //当前数字块在目标的左边，获取当前数字块右侧的数字块
+                                next = findPieceByCoordinate(x + 1, y);
+                            } else {
+                                //当前数字块在目标的右边，获取当前数字块左侧的数字块
+                                next = findPieceByCoordinate(x - 1, y);
+                            }
+                        }
+                        return next.getValue()[0] == 0;
+                    }
+                }
+            }
+            case ONETOONE: {
+                return aim.pieceType == PieceType.BLANK;
             }
             case TWOTOONE: {
-                if (direction == Direction.UP | direction == Direction.DOWN) {
-                    return true;
+                if (direction == Direction.UP || direction == Direction.DOWN) {
+                    return aim.pieceType == PieceType.BLANK;
                 } else {
-                    return findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1).pieceType == PieceType.BLANK;
+                    if (aim.pieceType != PieceType.BLANK) {
+                        return false;
+                    }
+                    //横向移动需判断目标块的上侧或下侧是否有数字0
+                    Piece next;
+                    int aimX = aim.getCoordinate()[0].getX();
+                    int aimY = aim.getCoordinate()[0].getY();
+                    if (aimY == piece.coordinate[0].getY()) {
+                        //目标在当前数字块的上边，获取目标下侧的数字块
+                        next = findPieceByCoordinate(aimX, aimY + 1);
+                    } else {
+                        //目标在当前数字块的下边，获取目标上侧的数字块
+                        next = findPieceByCoordinate(aimX, aimY - 1);
+                    }
+                    return next.getValue()[0] == 0;
                 }
             }
             case ONETOTWO: {
-                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
-                    return true;
+                if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                    return aim.pieceType == PieceType.BLANK;
                 } else {
-                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY()).pieceType == PieceType.BLANK;
+                    if (aim.pieceType != PieceType.BLANK) {
+                        break;
+                    }
+                    //纵向移动需判断目标块的左侧或右侧是否有数字0
+                    Piece next;
+                    int aimX = aim.getCoordinate()[0].getX();
+                    int aimY = aim.getCoordinate()[0].getY();
+                    if (aimX == piece.coordinate[0].getX()) {
+                        //目标在当前数字块的左边，获取目标右侧的数字块
+                        next = findPieceByCoordinate(aimX + 1, aimY);
+                    } else {
+                        //目标在当前数字块的右边，获取目标左侧的数字块
+                        next = findPieceByCoordinate(aimX - 1, aimY);
+                    }
+                    return next.getValue()[0] == 0;
                 }
             }
             case TWOTOTWO: {
-                if (direction == Direction.LEFT | direction == Direction.RIGHT) {
-                    return findPieceByCoordinate(aim.getCoordinate()[0].getX(), aim.getCoordinate()[0].getY() + 1).pieceType == PieceType.BLANK;
-                } else {
-                    return findPieceByCoordinate(aim.getCoordinate()[0].getX() + 1, aim.getCoordinate()[0].getY()).pieceType == PieceType.BLANK;
+                if (aim.pieceType != PieceType.BLANK) {
+                    break;
                 }
+                Piece next;
+                int aimX = aim.getCoordinate()[0].getX();
+                int aimY = aim.getCoordinate()[0].getY();
+                if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                    //横向移动需判断目标块的上侧或下侧是否有数字0
+                    if (aimY == piece.coordinate[0].getY()) {
+                        //目标在当前数字块的上边，获取目标下侧的数字块
+                        next = findPieceByCoordinate(aimX, aimY + 1);
+                    } else {
+                        //目标在当前数字块的下边，获取目标上侧的数字块
+                        next = findPieceByCoordinate(aimX, aimY - 1);
+                    }
+                } else {
+                    //纵向移动需判断目标块的左侧或右侧是否有数字0
+                    if (aimX == piece.coordinate[0].getX()) {
+                        //目标在当前数字块的左边，获取目标右侧的数字块
+                        next = findPieceByCoordinate(aimX + 1, aimY);
+                    } else {
+                        //目标在当前数字块的右边，获取目标左侧的数字块
+                        next = findPieceByCoordinate(aimX - 1, aimY);
+                    }
+                }
+                return next.getValue()[0] == 0;
             }
         }
         return false;
@@ -260,6 +501,7 @@ public class Board extends JComponent implements Cloneable {
         }
         return movable(aim, counterDirection(direction));
     }
+
     public static Direction counterDirection(Direction direction) {
         switch (direction) {
             case RIGHT:
@@ -330,6 +572,7 @@ public class Board extends JComponent implements Cloneable {
             }
         }
         StringBuilder sb = new StringBuilder();
+        sb.append("-------------------------------------------------------------").append('\n');
         for (String[] strings : boardC) {
             for (int j = 0; j < boardC[0].length; j++) {
                 sb.append(strings[j]);
@@ -338,13 +581,62 @@ public class Board extends JComponent implements Cloneable {
         }
         return sb.toString();
     }
+    /**
+     * 获取棋盘状态
+     *
+     * @return
+     */
+    public String getStatus() {
+        StringBuilder status = new StringBuilder();
+        for (int i = 0; i < marginY + 1; i++) {
+            for (int j = 0; j < marginX + 1; j++) {
+                status.append(findValueByCoordinate(j, i));
+                if (i != marginY || j != marginX) {
+                    status.append(",");
+                }
+            }
+        }
+        return status.toString();
+    }
+
+    /**
+     * 获取正确棋盘状态
+     *
+     * @return
+     */
+    public String getCorrectStatus() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < marginY + 1; i++) {
+            for (int j = 0; j < marginX + 1; j++) {
+                list.add(findValueByCoordinate(j, i));
+            }
+        }
+        String zeroStr = list.stream().filter(obj -> obj == 0)
+                .map(String::valueOf).collect(Collectors.joining(","));
+        String numStr = list.stream().filter(obj -> obj != 0)
+                .sorted()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+        return numStr + "," + zeroStr;
+    }
+
+    public Board() {
+    }
 
     @Override
-    public Board clone() throws CloneNotSupportedException {
-        Board clone = (Board) super.clone();
-        clone.pieces = pieces.clone();
+    public Board clone() {
+        Board clone = new Board();
+        if (pieces != null) {
+            clone.pieces = new Piece[pieces.length];
+            for (int i = 0; i < pieces.length; i++) {
+                clone.pieces[i] = pieces[i].clone();
+            }
+        }
         clone.marginY = marginY;
         clone.marginX = marginX;
+        clone.steps = new ArrayList<>();
+        clone.steps.addAll(steps);
         return clone;
     }
 }
+

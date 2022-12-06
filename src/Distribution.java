@@ -2,9 +2,11 @@ import java.util.Arrays;
 
 public class Distribution {
     int[][] dist;
+    int step;
 
-    public Distribution(Board board) {
+    public Distribution(Board board, int step) {
         dist = board.to2DArray();
+        this.step = step;
     }
 
     @Override

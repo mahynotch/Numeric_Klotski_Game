@@ -1,5 +1,5 @@
-//import org.jetbrains.annotations.NotNull;
-
+import java.util.Arrays;
+import java.util.Objects;
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,11 +8,13 @@ public class Piece extends JLabel implements Cloneable {
     private int[] value;
     Coordinate[] coordinate;
     PieceType pieceType;
+    String code;
 
     public Piece(int[] value, PieceType pieceType, Coordinate[] coordinate) {
         this.value = value;
         this.coordinate = coordinate;
         this.pieceType = pieceType;
+        this.code = code;
         setLocation(coordinate[0].getX()*100,coordinate[0].getY()*100);
         setBorder(BorderFactory.createRaisedBevelBorder());
         setHorizontalAlignment(SwingConstants.CENTER);
@@ -65,7 +67,6 @@ public class Piece extends JLabel implements Cloneable {
         setVisible(true);
     }
 
-
     public void move(Direction direction) {
         switch (direction) {
             case UP:
@@ -96,11 +97,43 @@ public class Piece extends JLabel implements Cloneable {
         return value;
     }
 
+    public Piece() {
+    }
+
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Piece clone = (Piece) super.clone();
-        clone.value = value.clone();
-        clone.coordinate = coordinate.clone();
+    protected Piece clone() {
+        Piece clone = new Piece();
+        if (value != null) {
+            clone.value = new int[value.length];
+            System.arraycopy(value, 0, clone.value, 0, value.length);
+        }
+        if (coordinate != null) {
+            clone.coordinate = new Coordinate[coordinate.length];
+            for (int i = 0; i < coordinate.length; i++) {
+                clone.coordinate[i] = coordinate[i].clone();
+            }
+        }
+        clone.pieceType = pieceType;
+        clone.code = code;
         return clone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Piece)) return false;
+        Piece piece = (Piece) o;
+        return code.equals(piece.code) &&
+                Arrays.equals(value, piece.value) &&
+                Arrays.equals(coordinate, piece.coordinate) &&
+                pieceType == piece.pieceType;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(pieceType, code);
+        result = 31 * result + Arrays.hashCode(value);
+        result = 31 * result + Arrays.hashCode(coordinate);
+        return result;
     }
 }
