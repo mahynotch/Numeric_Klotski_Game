@@ -105,6 +105,7 @@ public class Board extends JComponent implements Cloneable {
         int x = Cor[0].getX();
         int y = Cor[0].getY();
         Piece aim;
+        //找到移动后的位置上的Piece
         switch (direction) {
             case LEFT:
                 aim = findPieceByCoordinate(x - 1, y);
@@ -121,6 +122,7 @@ public class Board extends JComponent implements Cloneable {
             default:
                 aim = findPieceByCoordinate(x, y);
         }
+        //空格换到其他格子（感觉不是很必要啊）
         if (piece.pieceType == PieceType.BLANK) {
             if (aim.pieceType == PieceType.BLANK) {
                 piece.move(direction);
@@ -132,6 +134,7 @@ public class Board extends JComponent implements Cloneable {
             aim = temp;
             direction = counterDirection(direction);
         }
+        //非空格换到其它格子
         switch (piece.pieceType) {
             case ONETOONE: {
                 piece.move(direction);
@@ -183,7 +186,6 @@ public class Board extends JComponent implements Cloneable {
                     piece.move(direction);
                 }
             }
-
         }
         if (steps.size() >= 1) {
             if (steps.get(steps.size() - 1).equals(piece.getValue()[0] + " " + counterDirection(direction).toString().charAt(0))) {
@@ -195,6 +197,7 @@ public class Board extends JComponent implements Cloneable {
             steps.add(piece.getValue()[0] + " " + direction.toString().charAt(0));
         }
         lastDirection = direction;
+        piece.repaint();aim.repaint();
     }
 
     public boolean movable(Piece piece, Direction direction) {
@@ -350,6 +353,7 @@ public class Board extends JComponent implements Cloneable {
         super.paintComponent(g);
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
+
 
     @Override
     public String toString() {

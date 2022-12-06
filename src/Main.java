@@ -3,7 +3,7 @@ import java.util.*;
 /*
 可通过运行文件夹下的test.bat测试输入, 输入内容在./test/1.txt中
  */
-
+//一些痛苦的回忆
 public class Main {
     public static void main(String[] args) throws CloneNotSupportedException {
         Scanner scanner = new Scanner(System.in);

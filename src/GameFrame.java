@@ -83,7 +83,6 @@ public class GameFrame extends JFrame implements ActionListener {
             assert realDirection != null;
             board.move(board.findPieceByValue(movedPiece), realDirection);
             System.out.println(board);
-            //board1.repaint();
         } else if ("Random".equals((cmd))) {
             System.out.println("Generate a solvable board:");
         }
