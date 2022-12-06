@@ -36,7 +36,7 @@ public class Coordinate implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    protected Coordinate clone() {
+        return new Coordinate(x, y);
     }
 }
