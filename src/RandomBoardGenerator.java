@@ -56,8 +56,11 @@ public class RandomBoardGenerator {
         randomize(board);
         System.out.println(board);
         KlotskiSolverM solverM = new KlotskiSolverM(board);
+        long startTime = System.currentTimeMillis();
         solverM.solve();
-        System.out.println();
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
+        System.out.println(solverM.solution.length);
     }
 
     private static int[][] arrayGenerate(int row, int column) {

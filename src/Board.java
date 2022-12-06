@@ -13,6 +13,8 @@ public class Board extends JComponent implements Cloneable {
 
     ArrayList<String> steps = new ArrayList<>();
 
+    Direction lastDirection = Direction.NONE;
+
     public Board(Piece[] pieces, int marginX, int marginY) {
         this.pieces = pieces;
         this.marginX = marginX;
@@ -44,6 +46,22 @@ public class Board extends JComponent implements Cloneable {
             }
         }
         return pieceList.toArray(new Piece[0]);
+    }
+
+    public int[] findAllIndexByValue(int key) {
+        ArrayList<Integer> peaceList = new ArrayList<>();
+        for (int i = 0; i < pieces.length; i++) {
+            for (int j : pieces[i].getValue()) {
+                if (key == j) {
+                    peaceList.add(i);
+                }
+            }
+        }
+        int[] res = new int[peaceList.size()];
+        for (int i = 0; i < peaceList.size(); i++) {
+            res[i] = peaceList.get(i);
+        }
+        return res;
     }
 
     public Piece[] getPieces() {
@@ -167,6 +185,7 @@ public class Board extends JComponent implements Cloneable {
         } else {
             steps.add(piece.getValue()[0] + " " + direction.toString().charAt(0));
         }
+        lastDirection = direction;
     }
 
     public boolean movable(Piece piece, Direction direction) {
@@ -257,6 +276,41 @@ public class Board extends JComponent implements Cloneable {
         return movable(aim, counterDirection(direction));
     }
 
+    public Object[] zeroMovableWithAim(Piece piece, Direction direction) {
+        if (piece.pieceType != PieceType.BLANK) {
+            throw new IllegalArgumentException("This is not a BLANK piece!");
+        }
+        int x = piece.getCoordinate()[0].getX();
+        int y = piece.getCoordinate()[0].getY();
+        Piece aim;
+        Object[] objects = new Object[]{
+                Boolean.FALSE, null
+        };
+        switch (direction) {
+            case LEFT:
+                if (x == 0) return objects;
+                aim = findPieceByCoordinate(x - 1, y);
+                break;
+            case RIGHT:
+                if (x == marginX) return objects;
+                aim = findPieceByCoordinate(x + 1, y);
+                break;
+            case UP:
+                if (y == 0) return objects;
+                aim = findPieceByCoordinate(x, y - 1);
+                break;
+            case DOWN:
+                if (y == marginY) return objects;
+                aim = findPieceByCoordinate(x, y + 1);
+                break;
+            default:
+                aim = findPieceByCoordinate(x, y);
+        }
+        return new Object[]{
+                movable(aim, counterDirection(direction)), aim
+        };
+    }
+
     public static Direction counterDirection(Direction direction) {
         switch (direction) {
             case RIGHT:
@@ -265,8 +319,10 @@ public class Board extends JComponent implements Cloneable {
                 return Direction.UP;
             case LEFT:
                 return Direction.RIGHT;
-            default:
+            case UP:
                 return Direction.DOWN;
+            default:
+                return Direction.NONE;
         }
     }
 
@@ -330,12 +386,23 @@ public class Board extends JComponent implements Cloneable {
         return sb.toString();
     }
 
+    public Piece[] cloneOfPieces() {
+        Piece[] newPieces = new Piece[pieces.length];
+        for (int i = 0; i < pieces.length; i++) {
+            try {
+                newPieces[i] = (Piece) pieces[i].clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return newPieces;
+    }
+
     @Override
     public Board clone() throws CloneNotSupportedException {
         Board clone = (Board) super.clone();
-        clone.pieces = pieces.clone();
-        clone.marginY = marginY;
-        clone.marginX = marginX;
+        clone.pieces = cloneOfPieces();
+        clone.steps = (ArrayList<String>) steps.clone();
         return clone;
     }
 }

@@ -5,7 +5,7 @@ import java.util.*;
  */
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         Scanner scanner = new Scanner(System.in);
         int row = scanner.nextInt();
         int column = scanner.nextInt();
@@ -29,7 +29,7 @@ public class Main {
     }
 
     //CLI界面
-    public static void CLI(HashMap<Integer, String> hashMap, int[][] boardArray) {
+    public static void CLI(HashMap<Integer, String> hashMap, int[][] boardArray) throws CloneNotSupportedException {
         int row = boardArray.length;
         int column = boardArray[0].length;
         Board board = arrayToBoard(hashMap, boardArray);
@@ -41,8 +41,11 @@ public class Main {
         // board.Move(board.findPieceByValue(0),Direction.UP);
         //System.out.println(board);
         //打开Frame并传入数据
-        GameFrame gameFrame = new GameFrame(500, 600, pieces1, column - 1, row - 1);
-        gameFrame.setVisible(true);
+//        GameFrame gameFrame = new GameFrame(500, 600, pieces1, column - 1, row - 1);
+//        gameFrame.setVisible(true);
+        KlotskiSolverM solverM = new KlotskiSolverM(board);
+        solverM.singleSolver();
+        System.out.println(solverM.solution.length);
     }
 
     static Board arrayToBoard(HashMap<Integer, String> hashMap, int[][] boardArray) {

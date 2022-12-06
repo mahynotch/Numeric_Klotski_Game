@@ -40,11 +40,23 @@ public class Piece implements Cloneable {
         return value;
     }
 
+    public Coordinate[] cloneOfCoordinates() {
+        Coordinate[] newCoord = new Coordinate[coordinate.length];
+        for (int i = 0; i < coordinate.length; i++) {
+            try {
+                newCoord[i] = (Coordinate) coordinate[i].clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return newCoord;
+    }
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Piece clone = (Piece) super.clone();
         clone.value = value.clone();
-        clone.coordinate = coordinate.clone();
+        clone.coordinate = cloneOfCoordinates();
         return clone;
     }
 }
