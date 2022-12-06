@@ -2,35 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class GameFrame extends JFrame implements ActionListener {
     public int WIDTH;
     public int HEIGHT;
     public int CHESSBOARD_SIZE;
     Piece[] pieces;
-    public int marginX;
-    public int marginY;
-    public Board board;
-    public static GameFrame it;
+    int marginX;
+    int marginY;
+    Board board;
 
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public GameFrame(int width, int height, Piece[] pieces, int MarginX, int MarginY) {
+    public GameFrame(int width, int height, Piece[] pieces, int marginX, int marginY) {
         setTitle("Numeric Klotski"); //设置标题
         this.WIDTH = width;
         this.HEIGHT = height;
-        this.CHESSBOARD_SIZE = HEIGHT * 4 / 5;
-        this.marginX = MarginX;
-        this.marginY = MarginY;
         this.pieces = pieces;
+        this.marginX = marginX;
+        this.marginY = marginY;
 
 
         setSize(WIDTH, HEIGHT);
@@ -38,11 +27,11 @@ public class GameFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
 
-        setSize(WIDTH, HEIGHT);
-        setLocation(0, 0);
-        setLayout(null);
-        addBoard();
-
+        Board board = new Board(pieces, marginX, marginY);
+        board.setGameFrame(this);
+        board.setLocation(0, 90);
+        board.setSize(500,500);
+        add(board);
 
         JButton btnNew = new JButton("Go");
         btnNew.setActionCommand("Go");
@@ -52,15 +41,17 @@ public class GameFrame extends JFrame implements ActionListener {
         btnNew.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(btnNew);
 
-        setVisible(true);
-    }
+        JButton btnRandom = new JButton("Random");
+        btnRandom.setActionCommand("Random");
+        btnRandom.addActionListener(this);
+        btnRandom.setLocation(0, 45);
+        btnRandom.setSize(500, 45);
+        btnRandom.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(btnRandom);
 
-    public void addBoard() {
-        board = new Board(this.pieces, this.marginX, this.marginY);
-        board.setGameFrame(this);
-        board.setLocation(HEIGHT / 10, HEIGHT / 10 - 10);
-        add(board);
-        it = this;
+
+        setVisible(true);
+        repaint();
     }
 
     @Override
@@ -91,7 +82,11 @@ public class GameFrame extends JFrame implements ActionListener {
             System.out.println("Go: " + movedPiece + " " + moveDirection);
             assert realDirection != null;
             board.move(board.findPieceByValue(movedPiece), realDirection);
-            System.out.println(getBoard());
+            System.out.println(board);
+        } else if ("Random".equals((cmd))) {
+            System.out.println("Generate a solvable board:");
         }
     }
 }
+
+

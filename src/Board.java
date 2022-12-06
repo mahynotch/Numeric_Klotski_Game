@@ -1,6 +1,6 @@
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 //本类用以储存棋子
@@ -21,6 +21,9 @@ public class Board extends JComponent implements Cloneable {
         this.pieces = pieces;
         this.marginX = marginX;
         this.marginY = marginY;
+        for (Piece piece : pieces) {
+            add(piece);
+        }
     }
 
     public void setGameFrame(GameFrame gameFrame) {
@@ -79,7 +82,7 @@ public class Board extends JComponent implements Cloneable {
         throw new IllegalArgumentException("The coordinate is empty");
     }
 
-    public void move(Piece piece, @NotNull Direction direction) {
+    public void move(Piece piece, Direction direction) {
         Coordinate[] Cor = piece.getCoordinate();
         int x = Cor[0].getX();
         int y = Cor[0].getY();
@@ -144,23 +147,19 @@ public class Board extends JComponent implements Cloneable {
                 break;
             }
             case TWOTOTWO: {
+                Piece aim2;
                 if (direction == Direction.UP | direction == Direction.DOWN) {
-                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX() == piece.getCoordinate()[0].getX() ? aim.getCoordinate()[0].getX() + 1 : aim.getCoordinate()[0].getX() - 1
+                    aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX() == piece.getCoordinate()[0].getX() ? aim.getCoordinate()[0].getX() + 1 : aim.getCoordinate()[0].getX() - 1
                             , aim.getCoordinate()[0].getY());
-                    aim.move(counterDirection(direction));
-                    aim.move(counterDirection(direction));
-                    aim2.move(counterDirection(direction));
-                    aim2.move(counterDirection(direction));
-                    piece.move(direction);
                 } else {
-                    Piece aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX()
+                    aim2 = findPieceByCoordinate(aim.getCoordinate()[0].getX()
                             , aim.getCoordinate()[0].getY() == piece.getCoordinate()[0].getY() ? aim.getCoordinate()[0].getY() + 1 : aim.getCoordinate()[0].getY() - 1);
-                    aim.move(counterDirection(direction));
-                    aim.move(counterDirection(direction));
-                    aim2.move(counterDirection(direction));
-                    aim2.move(counterDirection(direction));
-                    piece.move(direction);
                 }
+                aim.move(counterDirection(direction));
+                aim.move(counterDirection(direction));
+                aim2.move(counterDirection(direction));
+                aim2.move(counterDirection(direction));
+                piece.move(direction);
             }
         }
         if (steps.size() >= 1) {
@@ -261,8 +260,7 @@ public class Board extends JComponent implements Cloneable {
         }
         return movable(aim, counterDirection(direction));
     }
-
-    public static Direction counterDirection(@NotNull Direction direction) {
+    public static Direction counterDirection(Direction direction) {
         switch (direction) {
             case RIGHT:
                 return Direction.LEFT;
@@ -283,6 +281,12 @@ public class Board extends JComponent implements Cloneable {
             }
         }
         return dist;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     @Override

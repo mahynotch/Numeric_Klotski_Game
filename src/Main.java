@@ -41,7 +41,7 @@ public class Main {
         // board.Move(board.findPieceByValue(0),Direction.UP);
         //System.out.println(board);
         //打开Frame并传入数据
-        GameFrame gameFrame = new GameFrame(500, 600, pieces1, column - 1, row - 1);
+        GameFrame gameFrame = new GameFrame(514, 627, pieces1,column-1,row-1);
         gameFrame.setVisible(true);
     }
 
