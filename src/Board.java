@@ -499,41 +499,6 @@ public class Board extends JComponent implements Cloneable {
         return movable(aim, counterDirection(direction));
     }
 
-    public Object[] zeroMovableWithAim(Piece piece, Direction direction) {
-        if (piece.pieceType != PieceType.BLANK) {
-            throw new IllegalArgumentException("This is not a BLANK piece!");
-        }
-        int x = piece.getCoordinate()[0].getX();
-        int y = piece.getCoordinate()[0].getY();
-        Piece aim;
-        Object[] objects = new Object[]{
-                Boolean.FALSE, null
-        };
-        switch (direction) {
-            case LEFT:
-                if (x == 0) return objects;
-                aim = findPieceByCoordinate(x - 1, y);
-                break;
-            case RIGHT:
-                if (x == marginX) return objects;
-                aim = findPieceByCoordinate(x + 1, y);
-                break;
-            case UP:
-                if (y == 0) return objects;
-                aim = findPieceByCoordinate(x, y - 1);
-                break;
-            case DOWN:
-                if (y == marginY) return objects;
-                aim = findPieceByCoordinate(x, y + 1);
-                break;
-            default:
-                aim = findPieceByCoordinate(x, y);
-        }
-        return new Object[]{
-                movable(aim, counterDirection(direction)), aim
-        };
-    }
-
     public static Direction counterDirection(Direction direction) {
         switch (direction) {
             case RIGHT:
@@ -542,10 +507,8 @@ public class Board extends JComponent implements Cloneable {
                 return Direction.UP;
             case LEFT:
                 return Direction.RIGHT;
-            case UP:
-                return Direction.DOWN;
             default:
-                return Direction.NONE;
+                return Direction.DOWN;
         }
     }
 
@@ -558,6 +521,7 @@ public class Board extends JComponent implements Cloneable {
         }
         return dist;
     }
+
 
     @Override
     public String toString() {
@@ -600,6 +564,7 @@ public class Board extends JComponent implements Cloneable {
             }
         }
         StringBuilder sb = new StringBuilder();
+        sb.append("-------------------------------------------------------------").append('\n');
         for (String[] strings : boardC) {
             for (int j = 0; j < boardC[0].length; j++) {
                 sb.append(strings[j]);
@@ -608,24 +573,62 @@ public class Board extends JComponent implements Cloneable {
         }
         return sb.toString();
     }
-
-    public Piece[] cloneOfPieces() {
-        Piece[] newPieces = new Piece[pieces.length];
-        for (int i = 0; i < pieces.length; i++) {
-            try {
-                newPieces[i] = (Piece) pieces[i].clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
+    /**
+     * 获取棋盘状态
+     *
+     * @return
+     */
+    public String getStatus() {
+        StringBuilder status = new StringBuilder();
+        for (int i = 0; i < marginY + 1; i++) {
+            for (int j = 0; j < marginX + 1; j++) {
+                status.append(findValueByCoordinate(j, i));
+                if (i != marginY || j != marginX) {
+                    status.append(",");
+                }
             }
         }
-        return newPieces;
+        return status.toString();
+    }
+
+    /**
+     * 获取正确棋盘状态
+     *
+     * @return
+     */
+    public String getCorrectStatus() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < marginY + 1; i++) {
+            for (int j = 0; j < marginX + 1; j++) {
+                list.add(findValueByCoordinate(j, i));
+            }
+        }
+        String zeroStr = list.stream().filter(obj -> obj == 0)
+                .map(String::valueOf).collect(Collectors.joining(","));
+        String numStr = list.stream().filter(obj -> obj != 0)
+                .sorted()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+        return numStr + "," + zeroStr;
+    }
+
+    public Board() {
     }
 
     @Override
-    public Board clone() throws CloneNotSupportedException {
-        Board clone = (Board) super.clone();
-        clone.pieces = cloneOfPieces();
-        clone.steps = (ArrayList<String>) steps.clone();
+    public Board clone() {
+        Board clone = new Board();
+        if (pieces != null) {
+            clone.pieces = new Piece[pieces.length];
+            for (int i = 0; i < pieces.length; i++) {
+                clone.pieces[i] = pieces[i].clone();
+            }
+        }
+        clone.marginY = marginY;
+        clone.marginX = marginX;
+        clone.steps = new ArrayList<>();
+        clone.steps.addAll(steps);
         return clone;
     }
 }
+
