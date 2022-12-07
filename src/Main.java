@@ -57,6 +57,18 @@ public class Main {
         }
         GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
         gameFrame.setVisible(true);
+
+        Board result = BFS.bfs(board);
+        if (result != null) {
+            System.out.println("Yes");
+            System.out.println(result.steps.size());
+            for (String step : result.steps) {
+                System.out.println(step);
+            }
+        } else {
+            System.out.println("No");
+        }
+
     }
 
     static Board arrayToBoard(HashMap<Integer, String> hashMap, int[][] boardArray) {
