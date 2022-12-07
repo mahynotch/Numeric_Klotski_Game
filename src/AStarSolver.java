@@ -1,12 +1,9 @@
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class AStarSolver {
     Board board;
 
-    HashMap<Distribution, Distribution> closeList = new HashMap<>();
+    HashSet<Distribution> closeList = new HashSet<>();
 
     Queue<Board> openList = new PriorityQueue<>((o1, o2) -> o1.H - o2.H);
 
@@ -33,7 +30,7 @@ public class AStarSolver {
 
     public void aStar() throws CloneNotSupportedException {
         Distribution distribution = new Distribution(board, 0);
-        closeList.put(distribution, distribution);
+        closeList.add(distribution);
         openList.add(board);
         Direction[] directions = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
         while (true) {
@@ -43,11 +40,8 @@ public class AStarSolver {
                     Board newBoard = present.clone();
                     Piece blank = newBoard.pieces[ind];
                     Object[] objects = newBoard.zeroMovableWithAim(blank, direction);
-                    if ((Boolean) objects[0]) {
-                        Coordinate temp = ((Piece) objects[1]).coordinate[0];
-                        if (isSorted[temp.y][temp.x]) {
-                            continue;
-                        }
+                    if ((boolean) objects[0]) {
+                        if (((Piece) objects[1]).pieceType == PieceType.BLANK) continue;
                         newBoard.move(blank, direction);
                         distribution = new Distribution(newBoard, 0);
                         int H = calculateH(distribution);
@@ -56,12 +50,12 @@ public class AStarSolver {
                             solution = newBoard.steps.toArray(new String[0]);
                             return;
                         }
-                        if (closeList.containsKey(distribution)) {
+                        if (closeList.contains(distribution)) {
                             continue;
                         }
                         newBoard.H = H;
                         openList.add(newBoard);
-                        closeList.put(distribution, distribution);
+                        closeList.add(distribution);
                     }
                 }
             }

@@ -1,5 +1,6 @@
 
 import java.util.*;
+
 /*
 可通过运行文件夹下的test.bat测试输入, 输入内容在./test/1.txt中
  */
@@ -44,8 +45,15 @@ public class Main {
         GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
         gameFrame.setVisible(true);
         AStarSolver solverM = new AStarSolver(board);
-        solverM.solve();
-        System.out.println(solverM.solution.length);
+        try {
+            solverM.solve();
+            System.out.println("Step: " + solverM.solution.length);
+            for (String s : solverM.solution) {
+                System.out.println(s);
+            }
+        } catch (Exception e) {
+            System.out.println("no");
+        }
     }
 
     static Board arrayToBoard(HashMap<Integer, String> hashMap, int[][] boardArray) {

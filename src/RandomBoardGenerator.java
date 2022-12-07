@@ -5,7 +5,7 @@ import java.util.Random;
 public class RandomBoardGenerator {
     public static void main(String[] args) throws CloneNotSupportedException {
         Random random = new Random();
-        int[][] pieceArray = arrayGenerate(random.nextInt(4) + 2, random.nextInt(4) + 2);
+        int[][] pieceArray = arrayGenerate(random.nextInt(3) + 3, random.nextInt(3) + 3);
         int numOfMorbid = random.nextInt(4);
         int[] morbids = new int[numOfMorbid];
         for (int i = 0; i < numOfMorbid; i++) {
