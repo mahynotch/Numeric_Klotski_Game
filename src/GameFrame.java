@@ -2,25 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Arrays;
 
 public class GameFrame extends JFrame implements ActionListener {
     public int WIDTH;
     public int HEIGHT;
-    public int CHESSBOARD_SIZE;
     Piece[] pieces;
     int marginX;
     int marginY;
     Board board;
 
-    public GameFrame(int width, int height, Piece[] pieces, int marginX, int marginY,Board board) {
+    public GameFrame(int width, int height, Piece[] pieces, int marginX, int marginY, Board board) {
         setTitle("Numeric Klotski"); //设置标题
         this.WIDTH = width;
         this.HEIGHT = height;
         this.pieces = pieces;
         this.marginX = marginX;
         this.marginY = marginY;
-        this.board=board;
+        this.board = board;
 
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null); // Center the window.
@@ -31,7 +30,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
         board.setGameFrame(this);
         board.setLocation(0, 90);
-        board.setSize(500,500);
+        board.setSize(500, 500);
         add(board);
 
         JButton btnNew = new JButton("Go");
@@ -50,41 +49,75 @@ public class GameFrame extends JFrame implements ActionListener {
         btnRandom.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(btnRandom);
 
-
         setVisible(true);
-        repaint();
     }
+
+    public Direction StoDirection(String s) {
+        Direction D = null;
+        switch (s) {
+            case "U": {
+                D = Direction.UP;
+                break;
+            }
+            case "D": {
+                D = Direction.DOWN;
+                break;
+            }
+            case "L": {
+                D = Direction.LEFT;
+                break;
+            }
+            case "R": {
+                D = Direction.RIGHT;
+                break;
+            }
+        }
+        return D;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("clicked");
-        Scanner scanner = new Scanner(System.in);
-        int movedPiece = scanner.nextInt();
-        String moveDirection = scanner.next();
-        Direction realDirection = null;
-        switch (moveDirection) {
-            case "L":
-                realDirection = Direction.LEFT;
-                break;
-            case "R":
-                realDirection = Direction.RIGHT;
-                break;
-            case "U":
-                realDirection = Direction.UP;
-                break;
-            case "D":
-                realDirection = Direction.DOWN;
-                break;
-            default:
-                break;
-        }
         String cmd = e.getActionCommand();
         if ("Go".equals(cmd)) {
-            System.out.println("Go: " + movedPiece + " " + moveDirection);
-            assert realDirection != null;
-            board.move(board.findPieceByValue(movedPiece), realDirection);
-            System.out.println(board);
+            remove(this.board);
+            if (Arrays.equals(board.getSolution(), new String[]{"No"})) {
+                JOptionPane.showMessageDialog(this.board, "No", "SOLVABLE?", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (board.counter >= board.solution.length) {
+                    JOptionPane.showMessageDialog(this.board, "Solved", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    String s = board.solution[board.counter];
+                    String[] s1 = s.split(" ");
+                    Piece movedPiece = board.findPieceByValue(Integer.parseInt(s1[0]));
+                    Direction direction = StoDirection(s1[1]);
+                    board.move(movedPiece, direction);
+                    System.out.println(board);
+                    board.setCounter(board.counter + 1);
+                    board.setGameFrame(this);
+                    board.setLocation(0, 90);
+                    board.setSize(500, 500);
+                    add(board);
+                    board.repaint();
+                }
+            }
+
         } else if ("Random".equals((cmd))) {
-            System.out.println("Generate a solvable board:");
+            System.out.println("Generate a solvable board");
+            remove(this.board);
+
+            try {
+                this.board = RandomBoardGenerator.RBG();
+            } catch (CloneNotSupportedException ex) {
+                ex.printStackTrace();
+            }
+            board.setGameFrame(this);
+            board.setLocation(0, 90);
+            board.setSize(500, 500);
+            for (int i = 0; i < board.pieces.length; i++) {
+                System.out.println(board.pieces[i].getCoordinate()[0].getX() + ":" + board.pieces[i].getCoordinate()[0].getY() + ";" + board.pieces[i].getValue()[0]);
+            }
+            add(board);
+            board.repaint();
         }
     }
 }

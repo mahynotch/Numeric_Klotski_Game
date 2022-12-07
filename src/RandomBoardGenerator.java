@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class RandomBoardGenerator {
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static Board RBG() throws CloneNotSupportedException {
         Random random = new Random();
         int[][] pieceArray = arrayGenerate(random.nextInt(3) + 3, random.nextInt(3) + 3);
         int numOfMorbid = random.nextInt(4);
@@ -55,12 +55,16 @@ public class RandomBoardGenerator {
         Board board = Main.arrayToBoard(hashMap, pieceArray);
         randomize(board);
         System.out.println(board);
+        Board Return = board;
         AStarSolver solverM = new AStarSolver(board);
         long startTime = System.currentTimeMillis();
         solverM.solve();
+        board.setCounter(0);
+        board.setSolution(solverM.solution);
         long endTime = System.currentTimeMillis();
         System.out.println(endTime - startTime);
         System.out.println(solverM.solution.length);
+        return Return;
     }
 
     private static int[][] arrayGenerate(int row, int column) {

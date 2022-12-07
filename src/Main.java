@@ -37,23 +37,26 @@ public class Main {
         ArrayList<Piece> pieces;
         Piece[] pieces1 = board.getPieces();
         //展示棋盘
-        System.out.println(board);
+        //System.out.println(board);
         //测试并打印移动后的棋盘
         // board.Move(board.findPieceByValue(0),Direction.UP);
         //System.out.println(board);
-        //打开Frame并传入数据
-        GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
-        gameFrame.setVisible(true);
+
         AStarSolver solverM = new AStarSolver(board);
         try {
             solverM.solve();
+            System.out.println("Yes");
             System.out.println("Step: " + solverM.solution.length);
             for (String s : solverM.solution) {
                 System.out.println(s);
             }
+            board.setSolution(solverM.solution);
         } catch (Exception e) {
             System.out.println("no");
+            board.setSolution(new String[]{"No"});
         }
+        GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
+        gameFrame.setVisible(true);
     }
 
     static Board arrayToBoard(HashMap<Integer, String> hashMap, int[][] boardArray) {

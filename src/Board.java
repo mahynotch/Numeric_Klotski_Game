@@ -14,6 +14,22 @@ public class Board extends JComponent implements Cloneable {
     //纵向边缘
     int marginY;
     GameFrame gameFrame;
+    String[] solution;
+    int counter = 0;
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public String[] getSolution() {
+        return solution;
+    }
+
+    public void setSolution(String[] solution) {
+        this.solution = solution;
+    }
+
+
 
     int H = 0;
     ArrayList<String> steps = new ArrayList<>();

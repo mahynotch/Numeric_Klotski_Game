@@ -36,10 +36,10 @@ public class Piece extends JLabel implements Cloneable {
             case ONETOTWO: {
                 setSize(200, 100);
                 setBackground(new Color(104, 148, 92));
-                setText(String.valueOf(value[0])
+                setText("<html><body>" + String.valueOf(value[0])
                         + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                         + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;"
-                        + String.valueOf(value[1]));
+                        + String.valueOf(value[1])+"<body></html>");
                 break;
             }
             case TWOTOONE: {
