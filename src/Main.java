@@ -23,10 +23,14 @@ public class Main {
         for (int i = 0; i < morbidLength; i++) {
             hashMap.put(scanner.nextInt(), scanner.next());
         }
-        if (args[0].equals("terminal")) {
-            CLI(hashMap, boardArray);
+        if (args.length > 0) {
+            if (args[0].equals("terminal")) {
+                CLI(hashMap, boardArray);
+            } else {
+                GUI(hashMap, boardArray);
+            }
         } else {
-            GUI(hashMap, boardArray);
+            CLI(hashMap, boardArray);
         }
     }
 
