@@ -26,8 +26,6 @@ public class GameFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
 
-        board = new Board(pieces, marginX, marginY);
-
         board.setGameFrame(this);
         board.setLocation(0, 90);
         board.setSize(500, 500);
@@ -79,7 +77,8 @@ public class GameFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if ("Go".equals(cmd)) {
-            remove(this.board);
+            board.removeAll();
+            board.repaint();
             if (Arrays.equals(board.getSolution(), new String[]{"No"})) {
                 JOptionPane.showMessageDialog(this.board, "No", "SOLVABLE?", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -91,35 +90,34 @@ public class GameFrame extends JFrame implements ActionListener {
                     Piece movedPiece = board.findPieceByValue(Integer.parseInt(s1[0]));
                     Direction direction = StoDirection(s1[1]);
                     board.move(movedPiece, direction);
-                    System.out.println(board);
+                    Piece[] MovedPiece = board.pieces;
+                    board.setPieces(MovedPiece);
+                    board.PutPieceOnBoard(MovedPiece);
                     board.setCounter(board.counter + 1);
-                    board.setGameFrame(this);
-                    board.setLocation(0, 90);
-                    board.setSize(500, 500);
-                    add(board);
                     board.repaint();
                 }
             }
 
         } else if ("Random".equals((cmd))) {
             System.out.println("Generate a solvable board");
-            remove(this.board);
-
+            board.removeAll();
+            board.setSolution(null);
+            board.setCounter(0);
             try {
-                this.board = RandomBoardGenerator.RBG();
+                Board board1 = RandomBoardGenerator.RBG();
+                Piece[] RandomPiece = board1.pieces;
+                board.setPieces(board1.pieces);
+                board.setSolution(board1.solution);
+                board.PutPieceOnBoard(RandomPiece);
             } catch (CloneNotSupportedException ex) {
                 ex.printStackTrace();
             }
-            board.setGameFrame(this);
-            board.setLocation(0, 90);
-            board.setSize(500, 500);
-            for (int i = 0; i < board.pieces.length; i++) {
-                System.out.println(board.pieces[i].getCoordinate()[0].getX() + ":" + board.pieces[i].getCoordinate()[0].getY() + ";" + board.pieces[i].getValue()[0]);
-            }
-            add(board);
+            System.out.println(board.counter);
+            System.out.println(board.solution.length+"G");
             board.repaint();
         }
     }
+
 }
 
 

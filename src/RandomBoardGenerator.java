@@ -99,7 +99,7 @@ public class RandomBoardGenerator {
     public static void randomize(Board board) {
         Piece[] pieces = board.findAllPieceByValue(0);
         for (Piece piece : pieces) {
-            for (int i = 0; i < 10000; i++) {
+            for (int i = 0; i < 1000; i++) {
                 Direction[] directions = new Direction[]{Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
                 Random rand = new Random();
                 Direction direction = directions[rand.nextInt(4)];

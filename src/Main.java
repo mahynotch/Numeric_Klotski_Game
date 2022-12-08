@@ -58,7 +58,7 @@ public class Main {
         GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
         gameFrame.setVisible(true);
 
-        Board result = BFS.bfs(board);
+        /*Board result = BFS.bfs(board);
         if (result != null) {
             System.out.println("Yes");
             System.out.println(result.steps.size());
@@ -67,7 +67,7 @@ public class Main {
             }
         } else {
             System.out.println("No");
-        }
+        }*/
 
     }
 

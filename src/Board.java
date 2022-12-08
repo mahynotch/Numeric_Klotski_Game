@@ -36,14 +36,20 @@ public class Board extends JComponent implements Cloneable {
 
     Direction lastDirection = Direction.NONE;
 
+
+
     public Board(Piece[] pieces, int marginX, int marginY) {
         this.pieces = pieces;
         this.marginX = marginX;
         this.marginY = marginY;
-        for (Piece piece : pieces) {
-            add(piece);
-        }
+        PutPieceOnBoard(pieces);
     }
+public void PutPieceOnBoard(Piece[]pieces){
+    for (Piece piece : pieces) {
+        piece.setLocation(piece.coordinate[0].getX() * 100, piece.coordinate[0].getY() * 100);
+        add(piece);
+    }
+}
 
     public void setGameFrame(GameFrame gameFrame) {
         this.gameFrame = gameFrame;
@@ -90,6 +96,9 @@ public class Board extends JComponent implements Cloneable {
 
     public Piece[] getPieces() {
         return pieces;
+    }
+    public void setPieces(Piece[] pieces) {
+        this.pieces = pieces;
     }
 
     public Piece findPieceByCoordinate(int x, int y) {
@@ -138,6 +147,7 @@ public class Board extends JComponent implements Cloneable {
             default:
                 aim = findPieceByCoordinate(x, y);
         }
+
         //空格换到其他格子（感觉不是很必要啊）
         if (piece.pieceType == PieceType.BLANK) {
             if (aim.pieceType == PieceType.BLANK) {
@@ -213,7 +223,7 @@ public class Board extends JComponent implements Cloneable {
             steps.add(piece.getValue()[0] + " " + direction.toString().charAt(0));
         }
         lastDirection = direction;
-        piece.repaint();aim.repaint();
+
     }
 
     public boolean movable(Piece piece, Direction direction) {
