@@ -13,8 +13,6 @@ public class AStarSolver {
 
     String[] solution = null;
 
-    int minStep = -1;
-
     boolean[][] isSorted;
 
     public AStarSolver(Board board) {
@@ -59,6 +57,7 @@ public class AStarSolver {
                     }
                 }
             }
+            if (openList.size() > 300000) throw new RuntimeException();
         }
     }
 

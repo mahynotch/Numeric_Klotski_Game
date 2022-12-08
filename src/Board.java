@@ -30,12 +30,10 @@ public class Board extends JComponent implements Cloneable {
     }
 
 
-
     int H = 0;
     ArrayList<String> steps = new ArrayList<>();
 
     Direction lastDirection = Direction.NONE;
-
 
 
     public Board(Piece[] pieces, int marginX, int marginY) {
@@ -44,12 +42,13 @@ public class Board extends JComponent implements Cloneable {
         this.marginY = marginY;
         PutPieceOnBoard(pieces);
     }
-public void PutPieceOnBoard(Piece[]pieces){
-    for (Piece piece : pieces) {
-        piece.setLocation(piece.coordinate[0].getX() * 100, piece.coordinate[0].getY() * 100);
-        add(piece);
+
+    public void PutPieceOnBoard(Piece[] pieces) {
+        for (Piece piece : pieces) {
+            piece.setLocation(piece.coordinate[0].getX() * 100, piece.coordinate[0].getY() * 100);
+            add(piece);
+        }
     }
-}
 
     public void setGameFrame(GameFrame gameFrame) {
         this.gameFrame = gameFrame;
@@ -97,6 +96,7 @@ public void PutPieceOnBoard(Piece[]pieces){
     public Piece[] getPieces() {
         return pieces;
     }
+
     public void setPieces(Piece[] pieces) {
         this.pieces = pieces;
     }

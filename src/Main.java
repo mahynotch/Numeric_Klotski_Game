@@ -23,41 +23,28 @@ public class Main {
         for (int i = 0; i < morbidLength; i++) {
             hashMap.put(scanner.nextInt(), scanner.next());
         }
-        long startTime = System.currentTimeMillis();
-        CLI(hashMap, boardArray);
-        long endTime = System.currentTimeMillis();
-        System.out.println("Running time:" + (endTime - startTime));
+        if (args[0].equals("terminal")) {
+            CLI(hashMap, boardArray);
+        } else {
+            GUI(hashMap, boardArray);
+        }
     }
 
     //CLI界面
     public static void CLI(HashMap<Integer, String> hashMap, int[][] boardArray) throws CloneNotSupportedException {
-        int row = boardArray.length;
-        int column = boardArray[0].length;
         Board board = arrayToBoard(hashMap, boardArray);
-        ArrayList<Piece> pieces;
-        Piece[] pieces1 = board.getPieces();
-        //展示棋盘
-        //System.out.println(board);
-        //测试并打印移动后的棋盘
-        // board.Move(board.findPieceByValue(0),Direction.UP);
-        //System.out.println(board);
-
         AStarSolver solverM = new AStarSolver(board);
         try {
             solverM.solve();
             System.out.println("Yes");
-            System.out.println("Step: " + solverM.solution.length);
-            for (String s : solverM.solution) {
-                System.out.println(s);
+            System.out.println(solverM.solution.length);
+            for (int i = 0; i < solverM.solution.length; i++) {
+                System.out.println(solverM.solution[i]);
             }
             board.setSolution(solverM.solution);
         } catch (Exception e) {
-            System.out.println("no");
-            board.setSolution(new String[]{"No"});
+            System.out.println("No");
         }
-        GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
-        gameFrame.setVisible(true);
-
         /*Board result = BFS.bfs(board);
         if (result != null) {
             System.out.println("Yes");
@@ -69,6 +56,29 @@ public class Main {
             System.out.println("No");
         }*/
 
+    }
+
+    public static void GUI(HashMap<Integer, String> hashMap, int[][] boardArray) throws CloneNotSupportedException {
+        int row = boardArray.length;
+        int column = boardArray[0].length;
+        Board board = arrayToBoard(hashMap, boardArray);
+        ArrayList<Piece> pieces;
+        Piece[] pieces1 = board.getPieces();
+        AStarSolver solverM = new AStarSolver(board);
+        try {
+            solverM.solve();
+            System.out.println("Yes");
+            System.out.println(solverM.solution.length);
+            for (int i = 0; i < solverM.solution.length; i++) {
+                System.out.println(solverM.solution[i]);
+            }
+            board.setSolution(solverM.solution);
+        } catch (Exception e) {
+            System.out.println("no");
+            board.setSolution(new String[]{"No"});
+        }
+        GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);
+        gameFrame.setVisible(true);
     }
 
     static Board arrayToBoard(HashMap<Integer, String> hashMap, int[][] boardArray) {
