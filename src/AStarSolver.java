@@ -5,7 +5,7 @@ public class AStarSolver {
 
     HashSet<Distribution> closeList = new HashSet<>();
 
-    Queue<Board> openList = new PriorityQueue<>((o1, o2) -> o1.H - o2.H);
+    Queue<Board> openList = new PriorityQueue<>(Comparator.comparingInt(o -> o.H));
 
     int[][] sorted;
 
@@ -42,7 +42,7 @@ public class AStarSolver {
                         if (((Piece) objects[1]).pieceType == PieceType.BLANK) continue;
                         newBoard.move(blank, direction);
                         distribution = new Distribution(newBoard, 0);
-                        int H = calculateH(distribution);
+                        int H = calculateH(newBoard);
                         if (H == 0) {
                             board = newBoard;
                             solution = newBoard.steps.toArray(new String[0]);
@@ -61,15 +61,13 @@ public class AStarSolver {
         }
     }
 
-    public int calculateH(Distribution distribution) {
+    public int calculateH(Board board) {
         int H = 0;
-        for (int i = 0; i < sorted.length; i++) {
-            for (int j = 0; j < sorted[0].length; j++) {
-                int val = distribution.dist[i][j];
-                if (val == 0) continue;
-                int[] xAndY = RandomBoardGenerator.findValue(sorted, val);
-                H += Math.abs(j - xAndY[0]) + Math.abs(i - xAndY[1]);
-            }
+        for (int i = 0; i < board.pieces.length; i++) {
+            int val = board.pieces[i].getValue()[0];
+            if (val == 0) continue;
+            int[] xAndY = RandomBoardGenerator.findValue(sorted, val);
+            H += Math.abs(board.pieces[i].coordinate[0].x - xAndY[0]) + Math.abs(board.pieces[i].coordinate[0].y - xAndY[1]);
         }
         return H;
     }

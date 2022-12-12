@@ -67,6 +67,69 @@ public class RandomBoardGenerator {
         return Return;
     }
 
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Random random = new Random();
+        int[][] pieceArray = arrayGenerate(random.nextInt(3) + 3, random.nextInt(3) + 3);
+        int numOfMorbid = random.nextInt(4);
+        int[] morbids = new int[numOfMorbid];
+        for (int i = 0; i < numOfMorbid; i++) {
+            morbids[i] = random.nextInt((pieceArray.length - 1) * pieceArray[0].length - 1) + 1;
+        }
+        HashMap<Integer, String> hashMap = new HashMap<>();
+        ArrayList<Integer> occupied = new ArrayList<>();
+        for (int i : morbids) {
+            ArrayList<PieceType> pieceTypes = new ArrayList<>();
+            int[] xAndY = findValue(pieceArray, i);
+            int x = xAndY[0];
+            int y = xAndY[1];
+            if (x < pieceArray[0].length - 1) {
+                if (pieceArray[y][x + 1] != 0 && !occupied.contains(pieceArray[y][x + 1])) {
+                    pieceTypes.add(PieceType.ONETOTWO);
+                    if (pieceArray[y + 1][x] != 0 && !occupied.contains(pieceArray[y + 1][x]) && pieceArray[y + 1][x + 1] != 0 && !occupied.contains(pieceArray[y + 1][x + 1])) {
+                        pieceTypes.add(PieceType.TWOTOTWO);
+                    }
+                }
+            }
+            if (pieceArray[y + 1][x] != 0 && !occupied.contains(pieceArray[y + 1][x])) {
+                pieceTypes.add(PieceType.TWOTOONE);
+            }
+            if (pieceTypes.size() != 0) {
+                PieceType pieceType = pieceTypes.get(random.nextInt(pieceTypes.size()));
+                switch (pieceType) {
+                    case TWOTOONE:
+                        hashMap.put(i, "2*1");
+                        occupied.add(i);
+                        occupied.add(pieceArray[y + 1][x]);
+                        break;
+                    case ONETOTWO:
+                        hashMap.put(i, "1*2");
+                        occupied.add(i);
+                        occupied.add(pieceArray[y][x + 1]);
+                        break;
+                    case TWOTOTWO:
+                        hashMap.put(i, "2*2");
+                        occupied.add(i);
+                        occupied.add(pieceArray[y + 1][x]);
+                        occupied.add(pieceArray[y][x + 1]);
+                        occupied.add(pieceArray[y + 1][x + 1]);
+                        break;
+                }
+            }
+        }
+        Board board = Main.arrayToBoard(hashMap, pieceArray);
+        randomize(board);
+        System.out.println(board);
+        Board Return = board;
+        AStarSolver solverM = new AStarSolver(board);
+        long startTime = System.currentTimeMillis();
+        solverM.solve();
+        board.setCounter(0);
+        board.setSolution(solverM.solution);
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
+        System.out.println(solverM.solution.length);
+    }
+
     private static int[][] arrayGenerate(int row, int column) {
         int[][] res = new int[row][column];
         Random random = new Random();
