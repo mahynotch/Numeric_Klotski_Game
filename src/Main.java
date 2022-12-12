@@ -6,7 +6,7 @@ import java.util.*;
  */
 //一些痛苦的回忆
 public class Main {
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int row = scanner.nextInt();
         int column = scanner.nextInt();
@@ -35,7 +35,7 @@ public class Main {
     }
 
     //CLI界面
-    public static void CLI(HashMap<Integer, String> hashMap, int[][] boardArray) throws CloneNotSupportedException {
+    public static void CLI(HashMap<Integer, String> hashMap, int[][] boardArray) {
         Board board = arrayToBoard(hashMap, boardArray);
         AStarSolver solverM = new AStarSolver(board);
         try {
@@ -45,28 +45,15 @@ public class Main {
             for (int i = 0; i < solverM.solution.length; i++) {
                 System.out.println(solverM.solution[i]);
             }
-            board.setSolution(solverM.solution);
         } catch (Exception e) {
             System.out.println("No");
         }
-        /*Board result = BFS.bfs(board);
-        if (result != null) {
-            System.out.println("Yes");
-            System.out.println(result.steps.size());
-            for (String step : result.steps) {
-                System.out.println(step);
-            }
-        } else {
-            System.out.println("No");
-        }*/
-
     }
 
-    public static void GUI(HashMap<Integer, String> hashMap, int[][] boardArray) throws CloneNotSupportedException {
+    public static void GUI(HashMap<Integer, String> hashMap, int[][] boardArray) {
         int row = boardArray.length;
         int column = boardArray[0].length;
         Board board = arrayToBoard(hashMap, boardArray);
-        ArrayList<Piece> pieces;
         Piece[] pieces1 = board.getPieces();
         AStarSolver solverM = new AStarSolver(board);
         try {

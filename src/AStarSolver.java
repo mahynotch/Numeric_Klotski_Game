@@ -27,7 +27,7 @@ public class AStarSolver {
     }
 
     public void aStar() throws CloneNotSupportedException {
-        Distribution distribution = new Distribution(board, 0);
+        Distribution distribution = new Distribution(board);
         closeList.add(distribution);
         openList.add(board);
         Direction[] directions = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
@@ -41,7 +41,7 @@ public class AStarSolver {
                     if ((boolean) objects[0]) {
                         if (((Piece) objects[1]).pieceType == PieceType.BLANK) continue;
                         newBoard.move(blank, direction);
-                        distribution = new Distribution(newBoard, 0);
+                        distribution = new Distribution(newBoard);
                         int H = calculateH(newBoard);
                         if (H == 0) {
                             board = newBoard;
@@ -57,7 +57,7 @@ public class AStarSolver {
                     }
                 }
             }
-            if (openList.size() > 300000) throw new RuntimeException();
+            if (Runtime.getRuntime().freeMemory() < 10) throw new RuntimeException();
         }
     }
 
