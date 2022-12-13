@@ -16,6 +16,7 @@ public class Piece extends JLabel implements Cloneable {
         setLocation(coordinate[0].getX() * 100, coordinate[0].getY() * 100);
         setBorder(BorderFactory.createRaisedBevelBorder());
         setHorizontalAlignment(SwingConstants.CENTER);
+
         switch (this.pieceType) {
             case BLANK: {
                 setBorder(BorderFactory.createLoweredBevelBorder());
@@ -26,13 +27,15 @@ public class Piece extends JLabel implements Cloneable {
             }
             case ONETOONE: {
                 setSize(100, 100);
-                setBackground(new Color(76, 128, 69));
+//                setBackground(new Color(76, 128, 69));
+                setBackground(new Color(204, 186, 169));
                 setText(String.valueOf(value[0]));
                 break;
             }
             case ONETOTWO: {
                 setSize(200, 100);
-                setBackground(new Color(104, 148, 92));
+//                setBackground(new Color(104, 148, 92));
+                setBackground(new Color(234, 178, 93));
                 setText("<html><body>" + String.valueOf(value[0])
                         + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                         + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;"
@@ -41,7 +44,8 @@ public class Piece extends JLabel implements Cloneable {
             }
             case TWOTOONE: {
                 setSize(100, 200);
-                setBackground(new Color(104, 148, 92));
+//                setBackground(new Color(104, 148, 92));
+                setBackground(new Color(234, 178, 93));
                 setText("<html><body>" + String.valueOf(value[0])
                         + "<br>" + " " + "<br>" + " " + "<br>" + " " + "<br>" + " " + "<br>" + " " + "<br>"
                         + String.valueOf(value[1]) + "<body></html>");
@@ -49,7 +53,8 @@ public class Piece extends JLabel implements Cloneable {
             }
             case TWOTOTWO: {
                 setSize(200, 200);
-                setBackground(new Color(122, 134, 108));
+//                setBackground(new Color(122, 134, 108));
+                setBackground(new Color(152, 197, 201));
                 setText("<html><body>" + String.valueOf(value[0])
                         + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                         + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;"

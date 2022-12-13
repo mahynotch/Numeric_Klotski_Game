@@ -65,7 +65,7 @@ public class Main {
             }
             board.setSolution(solverM.solution);
         } catch (Exception e) {
-            System.out.println("no");
+            System.out.println("No");
             board.setSolution(new String[]{"No"});
         }
         GameFrame gameFrame = new GameFrame(514, 627, pieces1, column - 1, row - 1, board);

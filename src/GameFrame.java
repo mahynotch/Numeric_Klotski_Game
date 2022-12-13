@@ -112,8 +112,6 @@ public class GameFrame extends JFrame implements ActionListener {
             } catch (CloneNotSupportedException ex) {
                 ex.printStackTrace();
             }
-            System.out.println(board.counter);
-            System.out.println(board.solution.length+"G");
             board.repaint();
         }
     }
